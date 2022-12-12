@@ -10,7 +10,8 @@
     <lazy-load v-if="loading"></lazy-load>
     <div v-else>
       <div v-if="products.length > 0">
-        <product-item v-for="(product, index) in products" :key="index" :product="product" @deleteProduct="deleteProduct"/>
+        <product-item v-for="(product, index) in products" :key="index" :product="product"
+                      @updateProduct="updateProduct" @deleteProduct="deleteProduct"/>
       </div>
       <p v-else>Aucun produits</p>
     </div>
@@ -78,6 +79,21 @@ export default defineComponent({
       })
     }
 
+    const updateProduct = (data) => {
+      loading.value = true
+      axios.put('http://127.0.0.1/api/produit/' + data.productId,
+          {name: data.newName, status: data.status},
+          {
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('token')
+          }
+      }).then(() => {
+        getProducts()
+      }).catch(error => {
+        console.log(error)
+      })
+    }
+
     const deleteProduct = (productId) => {
       loading.value = true
       axios.delete('http://127.0.0.1/api/produit/' + productId, {
@@ -91,7 +107,7 @@ export default defineComponent({
       })
     }
 
-    return {products, product, loading, addProduct, getProducts, deleteProduct}
+    return {products, product, loading, addProduct, getProducts, deleteProduct, updateProduct}
   }
 })
 </script>

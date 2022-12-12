@@ -8,7 +8,8 @@
     </div>
 
     <div class="courses">
-      <course-item v-for="(course, index) in courses" :key="index" :course="course"/>
+      <course-item v-for="(course, index) in courses" :key="index" :course="course"
+                   @updateCourse="updateCourse" @deleteCourse="deleteCourse"/>
     </div>
   </container>
 </template>
@@ -57,7 +58,33 @@ export default defineComponent({
       })
     }
 
-    return {courses, course, addCourse}
+    const updateCourse = (data) => {
+      axios.put('http://127.0.0.1/api/course/' + data.courseId, {name: data.newName}, {
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(() => {
+        getCourses()
+      }).catch(error => {
+        // TODO Manage error
+        console.log(error)
+      })
+    }
+
+    const deleteCourse = (courseId) => {
+      axios.delete('http://127.0.0.1/api/course/' + courseId, {
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(() => {
+        getCourses()
+      }).catch(error => {
+        // TODO Manage error
+        console.log(error)
+      })
+    }
+
+    return {courses, course, addCourse, updateCourse, deleteCourse}
   }
 });
 </script>

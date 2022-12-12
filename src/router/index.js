@@ -6,7 +6,7 @@ import Login from '@/views/Auth/Login.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/courses'
   },
   {
     path: '/courses',
