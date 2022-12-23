@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "mobileFlotte",
+	"webDir": "dist",
+	"bundledWebRuntime": false
+}
