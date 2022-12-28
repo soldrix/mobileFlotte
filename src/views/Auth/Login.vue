@@ -24,11 +24,11 @@ export default defineComponent({
     const router = useRouter()
 
     const login = () => {
-      axios.post('http://127.0.0.1/api/connexion', user.value)
+      axios.post('http://localhost:8000/api/login', user.value)
           .then(response => {
-            localStorage.setItem('token', response.data.token)
+            localStorage.setItem('token', response.data.access_token)
             user.value = {}
-            router.push('/courses')
+            router.push('/voitures')
           })
           .catch(error => {
             console.log(error)

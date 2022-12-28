@@ -1,14 +1,16 @@
 <template>
-  <container title="Liste de courses">
+  <container title="Liste d'agence">
     <div class="create">
       <form>
-        <input type="text" placeholder="Nom de la liste" v-model="course.name">
+        <input type="text" placeholder="Ville de l'agence" v-model="agence.ville">
+        <input type="text" placeholder="rue de l'agence" v-model="agence.rue">
+        <input type="text" placeholder="Code postal de l'agence" v-model="agence.codePostal">
         <button @click.prevent="addCourse">Ajouter</button>
       </form>
     </div>
 
     <div class="courses">
-      <course-item v-for="(course, index) in courses" :key="index" :course="course"
+      <Agence-item v-for="(agence, index) in agences" :key="index" :agence="agence"
                    @updateCourse="updateCourse" @deleteCourse="deleteCourse"/>
     </div>
   </container>
@@ -17,27 +19,30 @@
 <script>
 import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
-import CourseItem from "@/components/Courses/CourseItem";
+import AgenceItem from "@/components/AgenceItem";
 import axios from "axios";
 
 export default defineComponent({
   name: 'CoursesList',
   components: {
     Container,
-    CourseItem
+    AgenceItem
   },
   setup() {
-    const courses = ref([])
-    const course = ref({})
+    const agences = ref([])
+    const agence = ref({})
 
     const getCourses = () => {
-      axios.get('http://127.0.0.1/api/courses', {
+      axios.get('http://localhost:8000/api/agences', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        courses.value = response.data.courses
+        agences.value = response.data.data
       }).catch(error => {
+        if(error.message){
+          window.location.href  = "/login";
+        }
         console.log(error)
       })
     }
@@ -45,13 +50,13 @@ export default defineComponent({
     getCourses()
 
     const addCourse = () => {
-      axios.post('http://127.0.0.1/api/course', course.value, {
+      axios.post('http://localhost:8000/api/agence/create', agence.value, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
         getCourses()
-        course.value = {}
+        agence.value = {}
       }).catch(error => {
         // TODO Manage error
         console.log(error)
@@ -59,7 +64,7 @@ export default defineComponent({
     }
 
     const updateCourse = (data) => {
-      axios.put('http://127.0.0.1/api/course/' + data.courseId, {name: data.newName}, {
+      axios.post('http://localhost:8000/api/agence/update/', {ville: data.ville,id:data.id,rue:data.rue,codePostal:data.codePostal}, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -71,8 +76,8 @@ export default defineComponent({
       })
     }
 
-    const deleteCourse = (courseId) => {
-      axios.delete('http://127.0.0.1/api/course/' + courseId, {
+    const deleteCourse = (agenceId) => {
+      axios.delete('http://localhost:8000/api/agence/delete/' + agenceId, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -84,7 +89,7 @@ export default defineComponent({
       })
     }
 
-    return {courses, course, addCourse, updateCourse, deleteCourse}
+    return {agences, agence, addCourse, updateCourse, deleteCourse}
   }
 });
 </script>
@@ -117,7 +122,7 @@ export default defineComponent({
 
 .courses {
   padding: 15px;
-  background: #f3f3f3;
+  background: #232121;
   border-radius: 8px;
 
   & > div:not(& > div:last-child) {

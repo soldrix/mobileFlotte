@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import CoursesList from '../views/CoursesList.vue'
+import Agence from '../views/Agences.vue'
 import Register from '../views/Auth/Register.vue'
 import Login from '@/views/Auth/Login.vue'
-
+import voiture from "../views/voiture";
 const routes = [
   {
     path: '/',
-    redirect: '/courses'
+    redirect: '/voitures'
   },
   {
-    path: '/courses',
-    name: 'Courses',
-    component: CoursesList
+    path: '/agences',
+    name: 'Agence',
+    component: Agence
   },
   {
-    path: '/produits/:courseId',
-    name: 'Products',
-    component: () => import('@/views/ProductsList')
+    path: '/voitures',
+    name: 'Voiture',
+    component: voiture
   },
   {
     path: '/register',
