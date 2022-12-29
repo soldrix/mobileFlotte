@@ -21,6 +21,9 @@
         <ion-item lines="full" href="/agences">
           <ion-label>Agence</ion-label>
         </ion-item>
+        <ion-item lines="full" href="/entretiens">
+          <ion-label>Entretiens</ion-label>
+        </ion-item>
         <ion-item lines="full" @click="logout" class="logout">
           <ion-label>Déconnexion</ion-label>
         </ion-item>

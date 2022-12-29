@@ -3,6 +3,7 @@ import Agence from '../views/Agences.vue'
 import Register from '../views/Auth/Register.vue'
 import Login from '@/views/Auth/Login.vue'
 import voiture from "../views/voiture";
+import entretien from "../views/Entretiens";
 const routes = [
   {
     path: '/',
@@ -17,6 +18,11 @@ const routes = [
     path: '/voitures',
     name: 'Voiture',
     component: voiture
+  },
+  {
+    path: '/entretiens',
+    name: 'Entretien',
+    component: entretien
   },
   {
     path: '/register',
