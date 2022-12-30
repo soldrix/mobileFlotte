@@ -23,8 +23,8 @@
       </div>
       <pre v-if="!toggleUpdate">Note supplémentaire : <br> {{ entretien.note }}</pre>
       <div v-else class="div-modif">
-        <label for="note">Note supplémentaire : </label>
-        <textarea id="note" v-model="note" cols="30" rows="10"></textarea>
+        <label>Note supplémentaire : </label>
+        <textarea id="note" v-model="note"></textarea>
       </div>
       <h2 v-if="!toggleUpdate">Immatriculation : {{voitureData.immatriculation ?? 'Aucune voiture'}}</h2>
       <ion-list v-else>
@@ -72,7 +72,9 @@ export default defineComponent({
     const voitureData = ref([])
     const voitures = ref([])
     const voiture = ref({})
+
     if(props.entretien.id_voiture !== null){
+      //get immatriculation
       axios.get('http://localhost:8000/api/voiture/'+props.entretien.id_voiture,{
           headers:{
             "Authorization": 'Bearer ' + localStorage.getItem('token')
@@ -86,7 +88,7 @@ export default defineComponent({
         })
     }
 
-
+      //to get all car in the select
       axios.get('http://localhost:8000/api/voitures', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
@@ -100,10 +102,9 @@ export default defineComponent({
         console.log(error)
       })
 
-
     const updateEntretien = (courseId) => {
       if (toggleUpdate.value) {
-        emit('updateEntretien', {id: courseId, type: typeEntretien.value,nom:nomGarage.value,date:dateEntretien.value,montant:montant,note:note})
+        emit('updateEntretien', {id: courseId, type: typeEntretien.value,nom:nomGarage.value,date:dateEntretien.value,montant:montant.value,note:note.value,id_voiture:id_voiture.value})
         toggleUpdate.value = false
       } else {
         toggleUpdate.value = true

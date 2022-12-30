@@ -20,7 +20,7 @@
 
     <div class="courses">
       <EntretiensItem v-for="(entretien, index) in entretiens" :key="index" :entretien="entretien"
-                   @updateCourse="updateEntretien" @deleteCourse="updateEntretien"/>
+                   @updateEntretien="updateEntretien" @deleteEntretien="deleteEntretien"/>
     </div>
   </container>
 </template>
@@ -28,13 +28,13 @@
 <script>
 import { IonItem, IonList, IonSelect } from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
-import Container from "@/components/Container";
+import Container from "../components/Container";
 import SelectVoiture from "../components/SelectVoiture";
 import EntretiensItem from "../components/EntretiensItem";
 import axios from "axios";
 
 export default defineComponent({
-  name: 'CoursesList',
+  name: 'EntretienList',
   components: {
     Container,
     SelectVoiture,
@@ -96,7 +96,8 @@ export default defineComponent({
     }
 
     const updateEntretien = (data) => {
-      axios.post('http://localhost:8000/api/agence/update/', {ville: data.ville,id:data.id,rue:data.rue,codePostal:data.codePostal}, {
+      console.log(data)
+      axios.post('http://localhost:8000/api/entretien/update/', {id: data.id, type: data.type,nom:data.nom,date:data.date,montant: parseInt(data.montant),note:data.note,id_voiture:data.id_voiture}, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
