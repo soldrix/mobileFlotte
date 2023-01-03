@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { IonItem, IonList, IonSelect } from '@ionic/vue';
+import {IonItem, IonList, IonSelect, toastController} from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
 import Container from "../components/Container";
 import SelectVoiture from "../components/SelectVoiture";
@@ -48,6 +48,18 @@ export default defineComponent({
     const voiture = ref({})
     const entretiens = ref([])
     const entretien = ref({})
+
+    const  presentToast = async (datas) => {
+      const  toast = await toastController.create({
+        message: JSON.stringify(datas.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
+        duration: 4500,
+        position: 'middle'
+      });
+      toast.onDidDismiss = () =>{
+        toast.del()
+      }
+      await toast.present();
+    };
 
     const getVoitures = () => {
       axios.get('http://localhost:8000/api/voitures', {
@@ -91,13 +103,13 @@ export default defineComponent({
         entretien.value = {}
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
 
     const updateEntretien = (data) => {
       console.log(data)
-      axios.post('http://localhost:8000/api/entretien/update/', {id: data.id, type: data.type,nom:data.nom,date:data.date,montant: parseInt(data.montant),note:data.note,id_voiture:data.id_voiture}, {
+      axios.post('http://localhost:8000/api/entretien/update/', data, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -105,7 +117,7 @@ export default defineComponent({
         getEntretiens()
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
 
@@ -118,7 +130,7 @@ export default defineComponent({
         getEntretiens()
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
 

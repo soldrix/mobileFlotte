@@ -21,6 +21,7 @@ import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
 import AgenceItem from "@/components/AgenceItem";
 import axios from "axios";
+import {toastController} from "@ionic/vue";
 
 export default defineComponent({
   name: 'CoursesList',
@@ -31,7 +32,17 @@ export default defineComponent({
   setup() {
     const agences = ref([])
     const agence = ref({})
-
+    const  presentToast = async (datas) => {
+      const  toast = await toastController.create({
+        message: JSON.stringify(datas.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
+        duration: 4500,
+        position: 'middle'
+      });
+      toast.onDidDismiss = () =>{
+        toast.del()
+      }
+      await toast.present();
+    };
     const getCourses = () => {
       axios.get('http://localhost:8000/api/agences', {
         headers: {
@@ -43,7 +54,6 @@ export default defineComponent({
         if(error.message){
           window.location.href  = "/login";
         }
-        console.log(error)
       })
     }
 
@@ -59,7 +69,7 @@ export default defineComponent({
         agence.value = {}
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
 
@@ -72,7 +82,7 @@ export default defineComponent({
         getCourses()
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
 

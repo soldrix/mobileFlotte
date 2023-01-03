@@ -4,32 +4,32 @@
       <h2 v-if="!toggleUpdate">Type d'entretien : {{ entretien.type }}</h2>
       <div v-else class="div-modif">
         <label for="ville">Type d'entretien : </label>
-        <input id="ville" type="text" v-model="typeEntretien">
+        <input id="ville" type="text" :placeholder="entretien.type" v-model="entretiens.type">
       </div>
       <h2 v-if="!toggleUpdate">Nom du garage : {{ entretien.nom }}</h2>
       <div v-else class="div-modif">
         <label for="rue">Nom du garage : </label>
-        <input id="rue" type="text" v-model="nomGarage">
+        <input id="rue" type="text" :placeholder="entretien.nom" v-model="entretiens.nom">
       </div>
       <h2 v-if="!toggleUpdate">Date de l'entretien : {{ entretien.date }}</h2>
       <div v-else class="div-modif">
         <label for="codepostal">Date de l'entretien : </label>
-        <input id="codepostal" type="text" v-model="dateEntretien">
+        <input id="codepostal" type="text" :placeholder="entretien.date" v-model="entretiens.date">
       </div>
       <h2 v-if="!toggleUpdate">Montant total : {{ entretien.montant }}</h2>
       <div v-else class="div-modif">
         <label for="montant">Montant total : </label>
-        <input id="montant" type="text" v-model="montant">
+        <input id="montant" type="text" :placeholder="entretien.montant" v-model="entretiens.montant">
       </div>
       <pre v-if="!toggleUpdate">Note supplémentaire : <br> {{ entretien.note }}</pre>
       <div v-else class="div-modif">
         <label>Note supplémentaire : </label>
-        <textarea id="note" v-model="note"></textarea>
+        <textarea id="note" :placeholder="entretien.note?? 'Aucune note.'" v-model="entretiens.note"></textarea>
       </div>
       <h2 v-if="!toggleUpdate">Immatriculation : {{voitureData.immatriculation ?? 'Aucune voiture'}}</h2>
       <ion-list v-else>
         <ion-item>
-          <ion-select placeholder="Selectioner une voiture" v-model="id_voiture">
+          <ion-select :placeholder="voitureData.immatriculation ?? 'Selectioner une voiture'" v-model="entretiens.id_voiture">
             <select-voiture v-for="(voiture, index) in voitures" :key="index" :voiture="voiture" />
           </ion-select>
         </ion-item>
@@ -63,12 +63,9 @@ export default defineComponent({
   },
   setup(props, {emit}) {
     const toggleUpdate = ref(false)
-    const typeEntretien = ref(props.entretien.type)
-    const nomGarage = ref(props.entretien.nom)
-    const dateEntretien = ref(props.entretien.date)
-    const montant = ref(props.entretien.montant)
-    const note = ref(props.entretien.note)
-    const id_voiture = ref(props.entretien.id_voiture ?? 'null');
+    const entretiens = ref({
+      'id' : props.entretien.id,
+    });
     const voitureData = ref([])
     const voitures = ref([])
     const voiture = ref({})
@@ -102,9 +99,9 @@ export default defineComponent({
         console.log(error)
       })
 
-    const updateEntretien = (courseId) => {
+    const updateEntretien = () => {
       if (toggleUpdate.value) {
-        emit('updateEntretien', {id: courseId, type: typeEntretien.value,nom:nomGarage.value,date:dateEntretien.value,montant:montant.value,note:note.value,id_voiture:id_voiture.value})
+        emit('updateEntretien', entretiens.value)
         toggleUpdate.value = false
       } else {
         toggleUpdate.value = true
@@ -115,7 +112,7 @@ export default defineComponent({
       emit('deleteEntretien', courseId)
     }
 
-    return {updateEntretien, deleteEntretien, typeEntretien, toggleUpdate,nomGarage,dateEntretien,montant,note,voitureData,id_voiture,voitures,voiture}
+    return {updateEntretien, deleteEntretien, toggleUpdate,voitureData,voitures,voiture,entretiens}
   }
 })
 </script>

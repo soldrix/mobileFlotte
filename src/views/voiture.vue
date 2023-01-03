@@ -14,9 +14,9 @@
           </ion-item>
         </ion-list>
         <input type="file" @change="getFile">
-        <input type="date" placeholder="Circulation"  v-model="voiture.circulation">
+        <input type="text" placeholder="Date de circulation"  v-model="voiture.circulation">
         <input type="text" placeholder="Carburant" v-model="voiture.carburant">
-        <input type="text" placeholder="Type" v-model="voiture.type">
+        <input type="text" placeholder="Type de voiture" v-model="voiture.type">
         <input type="text" placeholder="Nombre de porte" v-model="voiture.nbPorte">
         <input type="text" placeholder="Nombre de place" v-model="voiture.nbPlace">
         <input type="text" placeholder="Immatricualtion" v-model="voiture.immatriculation">
@@ -95,9 +95,12 @@ export default defineComponent({
                "Authorization": 'Bearer ' + localStorage.getItem('token')
              }
            });
-          datas.ville = toto.data.agence.ville
-          datas.rue = toto.data.agence.rue
-          datas.codePostal = toto.data.agence.codePostal
+         if(toto.data.agence !== null){
+           datas.ville = toto.data.agence.ville
+           datas.rue = toto.data.agence.rue
+           datas.codePostal = toto.data.agence.codePostal
+         }
+
       }
       voitures.value = test;
     };
@@ -115,10 +118,20 @@ export default defineComponent({
         voiture.value = {}
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
-
+    const  presentToast = async (datas) => {
+      const  toast = await toastController.create({
+        message: JSON.stringify(datas.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
+        duration: 4500,
+        position: 'middle'
+      });
+      toast.onDidDismiss = () =>{
+        toast.del()
+      }
+      await toast.present();
+    };
     const updateVoiture = (data)=>{
       axios.post('http://localhost:8000/api/voiture/update/',
           data, {
@@ -130,19 +143,7 @@ export default defineComponent({
         getVoitures()
       }).catch(response => {
         // TODO Manage error
-        const  presentToast = async () => {
-          const  toast = await toastController.create({
-            message: JSON.stringify(response.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
-            duration: 4500,
-            position: 'middle'
-          });
-          toast.onDidDismiss = () =>{
-            toast.del()
-          }
-          await toast.present();
-        };
-        presentToast()
-        console.log(response.response.data.error)
+        presentToast(response)
       })
     };
 
@@ -156,7 +157,7 @@ export default defineComponent({
         getVoitures()
       }).catch(error => {
         // TODO Manage error
-        console.log(error)
+        presentToast(error)
       })
     }
 
@@ -177,7 +178,6 @@ ion-list{
   background: #f3f3f3;
   border-radius: 8px;
   margin-bottom: 20px;
-
   form {
     display: flex;
     flex-direction: column;
@@ -186,6 +186,7 @@ ion-list{
       padding: 10px 10px;
       border-radius: 8px;
       border: 1px solid black;
+      background: black;
     }
 
     button {
