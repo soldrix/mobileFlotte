@@ -33,13 +33,13 @@
     </div>
     <div class="courses">
       <VoitureItem v-for="(voiture, index) in voitures" :key="index" :voiture="voiture"
-                   @updateCourse="updateVoiture" @deleteCourse="deleteVoiture"/>
+                   @updateVoiture="updateVoiture" @deleteVoiture="deleteVoiture"/>
     </div>
   </container>
 </template>
 
 <script>
-import { IonItem, IonList, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonItem, IonList, IonSelect, IonSelectOption,toastController } from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
 import SelectAgence from "@/components/SelectAgence";
@@ -79,20 +79,28 @@ export default defineComponent({
     const getFile = (event) => {
       voiture.value.image =  event.target.files[0];
     };
-    const getVoitures = () => {
-      axios.get('http://localhost:8000/api/voitures', {
+
+
+
+    const getVoitures = async () => {
+      const azerty = await axios.get('http://localhost:8000/api/voitures', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
-      }).then(response => {
-        voitures.value = response.data
-      }).catch(error => {
-        if(error.message){
-          window.location.href  = "/login";
-        }
-        console.log(error)
-      })
-    }
+      });
+      let test =  azerty.data;
+      for (const datas of test) {
+         const toto = await axios.get('http://localhost:8000/api/agence/'+datas.id_agence,{
+             headers: {
+               "Authorization": 'Bearer ' + localStorage.getItem('token')
+             }
+           });
+          datas.ville = toto.data.agence.ville
+          datas.rue = toto.data.agence.rue
+          datas.codePostal = toto.data.agence.codePostal
+      }
+      voitures.value = test;
+    };
 
     getVoitures()
 
@@ -111,8 +119,31 @@ export default defineComponent({
       })
     }
 
-    const updateVoiture = ()=>{
-      getVoitures()
+    const updateVoiture = (data)=>{
+      axios.post('http://localhost:8000/api/voiture/update/',
+          data, {
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token'),
+          "Content-type": 'multipart/form-data'
+        }
+      }).then(() => {
+        getVoitures()
+      }).catch(response => {
+        // TODO Manage error
+        const  presentToast = async () => {
+          const  toast = await toastController.create({
+            message: JSON.stringify(response.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
+            duration: 4500,
+            position: 'middle'
+          });
+          toast.onDidDismiss = () =>{
+            toast.del()
+          }
+          await toast.present();
+        };
+        presentToast()
+        console.log(response.response.data.error)
+      })
     };
 
 
