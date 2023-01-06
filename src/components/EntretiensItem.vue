@@ -11,10 +11,10 @@
         <label for="rue">Nom du garage : </label>
         <input id="rue" type="text" :placeholder="entretien.nom" v-model="entretiens.nom">
       </div>
-      <h2 v-if="!toggleUpdate">Date de l'entretien : {{ entretien.date }}</h2>
+      <h2 v-if="!toggleUpdate">Date de l'entretien : {{ reverseDate(entretien.date) }}</h2>
       <div v-else class="div-modif">
         <label for="codepostal">Date de l'entretien : </label>
-        <input id="codepostal" type="text" :placeholder="entretien.date" v-model="entretiens.date">
+        <input id="codepostal" type="text" :placeholder="reverseDate(entretien.date)" v-model="entretiens.date">
       </div>
       <h2 v-if="!toggleUpdate">Montant total : {{ entretien.montant }}</h2>
       <div v-else class="div-modif">
@@ -98,9 +98,24 @@ export default defineComponent({
         }
         console.log(error)
       })
-
+    const reverseDate =  (d) => {
+      if(d.match('-')){
+        d = d.split('-');
+        return d[2] + '/' + d[1] + '/' + d[0]
+      }
+      if(d.match('/')) {
+        d = d.split('/');
+        return d[2] + '-' + d[1] + '-' + d[0]
+      }
+      else {
+        return d;
+      }
+    };
     const updateEntretien = () => {
       if (toggleUpdate.value) {
+        if(entretiens.value.date){
+          entretiens.value.date = reverseDate(entretiens.value.date);
+        }
         emit('updateEntretien', entretiens.value)
         toggleUpdate.value = false
       } else {
@@ -112,7 +127,7 @@ export default defineComponent({
       emit('deleteEntretien', courseId)
     }
 
-    return {updateEntretien, deleteEntretien, toggleUpdate,voitureData,voitures,voiture,entretiens}
+    return {updateEntretien, deleteEntretien, toggleUpdate,voitureData,voitures,voiture,entretiens,reverseDate}
   }
 })
 </script>

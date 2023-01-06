@@ -24,6 +24,15 @@
         <ion-item lines="full" href="/entretiens">
           <ion-label>Entretiens</ion-label>
         </ion-item>
+        <ion-item lines="full" href="/reparations">
+          <ion-label>Reparations</ion-label>
+        </ion-item>
+        <ion-item lines="full" href="/assurances">
+          <ion-label>Assurances</ion-label>
+        </ion-item>
+        <ion-item lines="full" href="/locations">
+          <ion-label>Locations</ion-label>
+        </ion-item>
         <ion-item lines="full" @click="logout" class="logout">
           <ion-label>Déconnexion</ion-label>
         </ion-item>

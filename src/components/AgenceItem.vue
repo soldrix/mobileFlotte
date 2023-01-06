@@ -4,23 +4,23 @@
       <h2 v-if="!toggleUpdate">Ville : {{ agence.ville }}</h2>
       <div v-else class="div-modif">
         <label for="ville">Ville : </label>
-        <input id="ville" type="text" v-model="villeAgence">
+        <input id="ville" type="text" :placeholder="agence.ville" v-model="agences.ville">
       </div>
       <h2 v-if="!toggleUpdate">Rue : {{ agence.rue }}</h2>
       <div v-else class="div-modif">
         <label for="rue">Rue : </label>
-        <input id="rue" type="text" v-model="rueAgence">
+        <input id="rue" type="text" :placeholder="agence.rue" v-model="agences.rue">
       </div>
       <h2 v-if="!toggleUpdate">Code postal : {{ agence.codePostal }}</h2>
       <div v-else class="div-modif">
         <label for="codepostal">Code postal : </label>
-        <input id="codepostal" type="text" v-model="codePostal">
+        <input id="codepostal" type="text" :placeholder="agence.codePostal" v-model="agences.codePostal">
       </div>
 
     </div>
     <div class="actions">
-      <button class="update" @click="updateCourse(agence.id)">Modifier</button>
-      <button class="delete" @click="deleteCourse(agence.id)">Supprimer</button>
+      <button class="update" @click="updateAgence(agence.id)">Modifier</button>
+      <button class="delete" @click="deleteAgence(agence.id)">Supprimer</button>
     </div>
   </div>
 </template>
@@ -29,7 +29,7 @@
 import {defineComponent, ref} from "vue";
 
 export default defineComponent({
-  name: "CourseItem",
+  name: "AgenceItem",
   props: {
     agence: {
       type: Object,
@@ -38,25 +38,24 @@ export default defineComponent({
   },
   setup(props, {emit}) {
     const toggleUpdate = ref(false)
-    const villeAgence = ref(props.agence.ville)
-    const rueAgence = ref(props.agence.rue)
-    const codePostal = ref(props.agence.codePostal)
+    const agences =ref({
+      'id' : props.agence.id
+    })
 
-
-    const updateCourse = (courseId) => {
+    const updateAgence = () => {
       if (toggleUpdate.value) {
-        emit('updateCourse', {id: courseId, ville: villeAgence.value,rue:rueAgence.value,codePostal:codePostal.value})
+        emit('updateAgence',agences.value)
         toggleUpdate.value = false
       } else {
         toggleUpdate.value = true
       }
     }
 
-    const deleteCourse = (courseId) => {
-      emit('deleteCourse', courseId)
+    const deleteAgence = (courseId) => {
+      emit('deleteAgence', courseId)
     }
 
-    return {updateCourse, deleteCourse, villeAgence, toggleUpdate,rueAgence,codePostal}
+    return {updateAgence, deleteAgence, agences, toggleUpdate}
   }
 })
 </script>

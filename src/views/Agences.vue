@@ -5,13 +5,13 @@
         <input type="text" placeholder="Ville de l'agence" v-model="agence.ville">
         <input type="text" placeholder="rue de l'agence" v-model="agence.rue">
         <input type="text" placeholder="Code postal de l'agence" v-model="agence.codePostal">
-        <button @click.prevent="addCourse">Ajouter</button>
+        <button @click.prevent="addAgence">Ajouter</button>
       </form>
     </div>
 
     <div class="courses">
       <Agence-item v-for="(agence, index) in agences" :key="index" :agence="agence"
-                   @updateCourse="updateCourse" @deleteCourse="deleteCourse"/>
+                   @updateAgence="updateAgence" @deleteAgence="deleteAgence"/>
     </div>
   </container>
 </template>
@@ -43,7 +43,7 @@ export default defineComponent({
       }
       await toast.present();
     };
-    const getCourses = () => {
+    const getAgences = () => {
       axios.get('http://localhost:8000/api/agences', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
@@ -57,15 +57,15 @@ export default defineComponent({
       })
     }
 
-    getCourses()
+    getAgences()
 
-    const addCourse = () => {
+    const addAgence = () => {
       axios.post('http://localhost:8000/api/agence/create', agence.value, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        getCourses()
+        getAgences()
         agence.value = {}
       }).catch(error => {
         // TODO Manage error
@@ -73,33 +73,33 @@ export default defineComponent({
       })
     }
 
-    const updateCourse = (data) => {
-      axios.post('http://localhost:8000/api/agence/update/', {ville: data.ville,id:data.id,rue:data.rue,codePostal:data.codePostal}, {
+    const updateAgence = (data) => {
+      axios.post('http://localhost:8000/api/agence/update/', data, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        getCourses()
+        getAgences()
       }).catch(error => {
         // TODO Manage error
         presentToast(error)
       })
     }
 
-    const deleteCourse = (agenceId) => {
+    const deleteAgence = (agenceId) => {
       axios.delete('http://localhost:8000/api/agence/delete/' + agenceId, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        getCourses()
+        getAgences()
       }).catch(error => {
         // TODO Manage error
         console.log(error)
       })
     }
 
-    return {agences, agence, addCourse, updateCourse, deleteCourse}
+    return {agences, agence, addAgence, updateAgence, deleteAgence}
   }
 });
 </script>
@@ -118,6 +118,7 @@ export default defineComponent({
     input {
       padding: 10px 10px;
       border-radius: 8px;
+      margin: 2.5px 0;
       border: 1px solid black;
     }
 

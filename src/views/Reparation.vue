@@ -1,26 +1,26 @@
 <template>
-  <container title="Liste d'entretiens">
+  <container title="Liste des reparations">
     <div class="create">
       <form>
-        <input type="text" placeholder="Type d'entretien" v-model="entretien.type">
-        <input type="text" placeholder="Date de l'entretien ex:(21/10/2000)" v-model="entretien.date">
-        <input type="text" placeholder="Nom du garage" v-model="entretien.nom">
-        <input type="text" placeholder="Montant total" v-model="entretien.montant">
-        <textarea placeholder="Note supplémentaire ..." v-model="entretien.note" cols="30" rows="10"></textarea>
+        <input type="text" placeholder="Type de reparation" v-model="reparation.type">
+        <input type="text" placeholder="Date ex:(10/12/2000)" v-model="reparation.date">
+        <input type="text" placeholder="Nom du garage" v-model="reparation.nom">
+        <input type="text" placeholder="Montant total" v-model="reparation.montant">
+        <textarea placeholder="Note supplémentaire ..." v-model="reparation.note" cols="30" rows="10"></textarea>
         <ion-list>
           <ion-item>
-            <ion-select placeholder="Selectioner une voiture" v-model="entretien.id_voiture">
+            <ion-select placeholder="Selectioner une voiture" v-model="reparation.id_voiture">
               <select-voiture v-for="(voiture, index) in voitures" :key="index" :voiture="voiture" />
             </ion-select>
           </ion-item>
         </ion-list>
-        <button @click.prevent="addEntretien">Ajouter</button>
+        <button @click.prevent="addReparation">Ajouter</button>
       </form>
     </div>
 
     <div class="courses">
-      <EntretiensItem v-for="(entretien, index) in entretiens" :key="index" :entretien="entretien"
-                   @updateEntretien="updateEntretien" @deleteEntretien="deleteEntretien"/>
+      <ReparationItem v-for="(reparation, index) in reparations" :key="index" :reparation="reparation"
+                      @updateReparation="updateReparation" @deleteReparation="deleteReparation"/>
     </div>
   </container>
 </template>
@@ -30,15 +30,14 @@ import {IonItem, IonList, IonSelect, toastController} from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
 import Container from "../components/Container";
 import SelectVoiture from "../components/SelectVoiture";
-import EntretiensItem from "../components/EntretiensItem";
 import axios from "axios";
-
+import ReparationItem from "../components/ReparationItem";
 export default defineComponent({
-  name: 'EntretienList',
+  name: 'ReparationList',
   components: {
     Container,
     SelectVoiture,
-    EntretiensItem,
+    ReparationItem,
     IonItem,
     IonList,
     IonSelect
@@ -46,8 +45,8 @@ export default defineComponent({
   setup() {
     const voitures = ref([])
     const voiture = ref({})
-    const entretiens = ref([])
-    const entretien = ref({})
+    const reparations = ref([])
+    const reparation = ref({})
 
     const  presentToast = async (datas) => {
       const  toast = await toastController.create({
@@ -87,13 +86,13 @@ export default defineComponent({
         console.log(error)
       })
     }
-    const getEntretiens = () => {
-      axios.get('http://localhost:8000/api/entretiens', {
+    const getReparations = () => {
+      axios.get('http://localhost:8000/api/reparations', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        entretiens.value = response.data
+        reparations.value = response.data
       }).catch(error => {
         if(error.message){
           window.location.href  = "/login";
@@ -103,51 +102,50 @@ export default defineComponent({
     }
 
     getVoitures()
-    getEntretiens()
+    getReparations()
 
-    const addEntretien = () => {
-      entretien.value.date = reverseDate(entretien.value.date);
-      axios.post('http://localhost:8000/api/entretien/create', entretien.value, {
+    const addReparation = () => {
+      reparation.value.date = reverseDate(reparation.value.date);
+      axios.post('http://localhost:8000/api/reparation/create', reparation.value, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        getEntretiens()
-        entretien.value = {}
+        getReparations()
+        reparation.value = {}
       }).catch(error => {
         // TODO Manage error
         presentToast(error)
       })
     }
 
-    const updateEntretien = (data) => {
-      console.log(data)
-      axios.post('http://localhost:8000/api/entretien/update/', data, {
+    const updateReparation = (data) => {
+      axios.post('http://localhost:8000/api/reparation/update/', data, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        getEntretiens()
+        getReparations()
       }).catch(error => {
         // TODO Manage error
         presentToast(error)
       })
     }
 
-    const deleteEntretien = (agenceId) => {
-      axios.delete('http://localhost:8000/api/entretien/delete/' + agenceId, {
+    const deleteReparation = (reparationId) => {
+      axios.delete('http://localhost:8000/api/reparation/delete/' + reparationId, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        getEntretiens()
+        getReparations()
       }).catch(error => {
         // TODO Manage error
         presentToast(error)
       })
     }
 
-    return {entretiens, entretien, addEntretien, updateEntretien, deleteEntretien,voiture,voitures}
+    return {reparations, reparation, addReparation, updateReparation, deleteReparation,voiture,voitures}
   }
 });
 </script>

@@ -4,6 +4,9 @@ import Register from '../views/Auth/Register.vue'
 import Login from '@/views/Auth/Login.vue'
 import voiture from "../views/voiture";
 import entretien from "../views/Entretiens";
+import Reparation from "../views/Reparation";
+import Assurance from "../views/Assurance";
+import Location from "../views/Location";
 const routes = [
   {
     path: '/',
@@ -23,6 +26,21 @@ const routes = [
     path: '/entretiens',
     name: 'Entretien',
     component: entretien
+  },
+  {
+    path: '/reparations',
+    name: 'Reparation',
+    component: Reparation
+  },
+  {
+    path: '/assurances',
+    name: 'Assurance',
+    component: Assurance
+  },
+  {
+    path: '/locations',
+    name: 'Location',
+    component: Location
   },
   {
     path: '/register',

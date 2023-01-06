@@ -1,65 +1,53 @@
 <template>
-  <container title="Liste d'entretiens">
+  <container title="Liste d'assurance">
     <div class="create">
       <form>
-        <input type="text" placeholder="Type d'entretien" v-model="entretien.type">
-        <input type="text" placeholder="Date de l'entretien ex:(21/10/2000)" v-model="entretien.date">
-        <input type="text" placeholder="Nom du garage" v-model="entretien.nom">
-        <input type="text" placeholder="Montant total" v-model="entretien.montant">
-        <textarea placeholder="Note supplémentaire ..." v-model="entretien.note" cols="30" rows="10"></textarea>
+        <input type="text" placeholder="Nom de l'assurance" v-model="assurance.nom">
+        <input type="text" placeholder="Date de debut" v-model="assurance.DateDebut">
+        <input type="text" placeholder="date de fin" v-model="assurance.DateFin">
+        <input type="text" placeholder="Frais" v-model="assurance.frais">
         <ion-list>
           <ion-item>
-            <ion-select placeholder="Selectioner une voiture" v-model="entretien.id_voiture">
+            <ion-select placeholder="Selectioner une voiture" v-model="assurance.id_voiture">
               <select-voiture v-for="(voiture, index) in voitures" :key="index" :voiture="voiture" />
             </ion-select>
           </ion-item>
         </ion-list>
-        <button @click.prevent="addEntretien">Ajouter</button>
+        <button @click.prevent="addAssurance">Ajouter</button>
       </form>
     </div>
 
     <div class="courses">
-      <EntretiensItem v-for="(entretien, index) in entretiens" :key="index" :entretien="entretien"
-                   @updateEntretien="updateEntretien" @deleteEntretien="deleteEntretien"/>
+      <AssuranceItem v-for="(assurance, index) in assurances" :key="index" :assurance="assurance"
+                   @updateAssurance="updateAssurance" @deleteAssurance="deleteAssurance"/>
     </div>
   </container>
 </template>
 
 <script>
-import {IonItem, IonList, IonSelect, toastController} from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
-import Container from "../components/Container";
+import Container from "@/components/Container";
+import AssuranceItem from "../components/AssuranceItem";
 import SelectVoiture from "../components/SelectVoiture";
-import EntretiensItem from "../components/EntretiensItem";
 import axios from "axios";
+import {IonItem, IonList, IonSelect, toastController} from '@ionic/vue';
 
 export default defineComponent({
-  name: 'EntretienList',
+  name: 'AssuranceList',
   components: {
     Container,
+    AssuranceItem,
     SelectVoiture,
-    EntretiensItem,
-    IonItem,
     IonList,
+    IonItem,
     IonSelect
   },
   setup() {
+    const assurances = ref([])
+    const assurance = ref({})
     const voitures = ref([])
     const voiture = ref({})
-    const entretiens = ref([])
-    const entretien = ref({})
 
-    const  presentToast = async (datas) => {
-      const  toast = await toastController.create({
-        message: JSON.stringify(datas.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
-        duration: 4500,
-        position: 'middle'
-      });
-      toast.onDidDismiss = () =>{
-        toast.del()
-      }
-      await toast.present();
-    };
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');
@@ -73,6 +61,7 @@ export default defineComponent({
         return d;
       }
     };
+
     const getVoitures = () => {
       axios.get('http://localhost:8000/api/voitures', {
         headers: {
@@ -87,67 +76,77 @@ export default defineComponent({
         console.log(error)
       })
     }
-    const getEntretiens = () => {
-      axios.get('http://localhost:8000/api/entretiens', {
+    getVoitures()
+    const  presentToast = async (datas) => {
+      const  toast = await toastController.create({
+        message: JSON.stringify(datas.response.data.error).replaceAll('{', '').replaceAll('}','').replaceAll(','," </br>") ,
+        duration: 4500,
+        position: 'middle'
+      });
+      toast.onDidDismiss = () =>{
+        toast.del()
+      }
+      await toast.present();
+    };
+    const getAssurances = () => {
+      axios.get('http://localhost:8000/api/assurances', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        entretiens.value = response.data
+        assurances.value = response.data.data
       }).catch(error => {
         if(error.message){
           window.location.href  = "/login";
         }
+      })
+    }
+
+    getAssurances()
+
+    const addAssurance = () => {
+      assurance.value.DateDebut =reverseDate(assurance.value.DateDebut);
+      assurance.value.DateFin =reverseDate(assurance.value.DateFin);
+      axios.post('http://localhost:8000/api/assurance/create', assurance.value, {
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(() => {
+        getAssurances()
+        assurance.value = {}
+      }).catch(error => {
+        // TODO Manage error
+        presentToast(error)
+      })
+    }
+
+    const updateAssurance = (data) => {
+      axios.post('http://localhost:8000/api/assurance/update/', data, {
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(() => {
+        getAssurances()
+      }).catch(error => {
+        // TODO Manage error
+        presentToast(error)
+      })
+    }
+
+    const deleteAssurance = (agenceId) => {
+      axios.delete('http://localhost:8000/api/assurance/delete/' + agenceId, {
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(() => {
+        getAssurances()
+      }).catch(error => {
+        // TODO Manage error
         console.log(error)
       })
     }
 
-    getVoitures()
-    getEntretiens()
-
-    const addEntretien = () => {
-      entretien.value.date = reverseDate(entretien.value.date);
-      axios.post('http://localhost:8000/api/entretien/create', entretien.value, {
-        headers: {
-          "Authorization": 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(() => {
-        getEntretiens()
-        entretien.value = {}
-      }).catch(error => {
-        // TODO Manage error
-        presentToast(error)
-      })
-    }
-
-    const updateEntretien = (data) => {
-      console.log(data)
-      axios.post('http://localhost:8000/api/entretien/update/', data, {
-        headers: {
-          "Authorization": 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(() => {
-        getEntretiens()
-      }).catch(error => {
-        // TODO Manage error
-        presentToast(error)
-      })
-    }
-
-    const deleteEntretien = (agenceId) => {
-      axios.delete('http://localhost:8000/api/entretien/delete/' + agenceId, {
-        headers: {
-          "Authorization": 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(() => {
-        getEntretiens()
-      }).catch(error => {
-        // TODO Manage error
-        presentToast(error)
-      })
-    }
-
-    return {entretiens, entretien, addEntretien, updateEntretien, deleteEntretien,voiture,voitures}
+    return {assurances, assurance, addAssurance, updateAssurance, deleteAssurance,voitures,voiture}
   }
 });
 </script>
