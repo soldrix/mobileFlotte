@@ -103,8 +103,10 @@ export default defineComponent({
 
     const updateLocation = () => {
       if (toggleUpdate.value) {
-        if(locations.value.DateDebut || locations.value.DateFin){
+        if(locations.value.DateDebut){
           locations.value.DateDebut = reverseDate(locations.value.DateDebut);
+        }
+        if(locations.value.DateFin){
           locations.value.DateFin = reverseDate(locations.value.DateFin);
         }
         emit('updateLocation',locations.value)

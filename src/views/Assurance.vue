@@ -105,8 +105,12 @@ export default defineComponent({
     getAssurances()
 
     const addAssurance = () => {
-      assurance.value.DateDebut =reverseDate(assurance.value.DateDebut);
-      assurance.value.DateFin =reverseDate(assurance.value.DateFin);
+      if(assurance.value.DateDebut){
+        assurance.value.DateDebut =reverseDate(assurance.value.DateDebut);
+      }
+      if(assurance.value.DateFin){
+        assurance.value.DateFin =reverseDate(assurance.value.DateFin);
+      }
       axios.post('http://localhost:8000/api/assurance/create', assurance.value, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')

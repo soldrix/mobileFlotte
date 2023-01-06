@@ -104,8 +104,12 @@ export default defineComponent({
     getLocations()
 
     const addLocation = () => {
-      location.value.DateDebut =reverseDate(location.value.DateDebut);
-      location.value.DateFin =reverseDate(location.value.DateFin);
+      if(location.value.DateDebut){
+        location.value.DateDebut =reverseDate(location.value.DateDebut);
+      }
+      if(location.value.DateFin){
+        location.value.DateFin =reverseDate(location.value.DateFin);
+      }
       axios.post('http://localhost:8000/api/location/create', location.value, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')

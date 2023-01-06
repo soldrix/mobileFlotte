@@ -108,8 +108,10 @@ export default defineComponent({
 
     const updateAssurance = () => {
       if (toggleUpdate.value) {
-        if(assurances.value.DateDebut || assurances.value.DateFin){
+        if(assurances.value.DateDebut  ){
           assurances.value.DateDebut = reverseDate(assurances.value.DateDebut);
+        }
+        if(assurances.value.DateFin){
           assurances.value.DateFin = reverseDate(assurances.value.DateFin);
         }
         emit('updateAssurance',assurances.value)
