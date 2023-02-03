@@ -1,69 +1,74 @@
 <template>
-  <container title="Liste d'agence">
+  <container title="Liste de voiture">
     <div class="courses">
-      <Agence-item v-for="(agence, index) in agences" :key="index" :agence="agence"
-                   @VoituresAgence="VoituresAgence"/>
+      <VoitureItem v-for="(voiture, index) in voitures" :key="index" :voiture="voiture"
+                  @voitureLocation="voitureLocation"/>
     </div>
   </container>
 </template>
 
 <script>
 import {defineComponent, ref} from 'vue';
-import Container from "../components/Container";
-import AgenceItem from "../components/AgenceItem";
+import Container from "@/components/Container";
+import VoitureItem from "../components/Voitureitem";
 import axios from "axios";
 
 export default defineComponent({
   name: 'CoursesList',
   components: {
     Container,
-    AgenceItem
+    VoitureItem
   },
   setup() {
-    const agences = ref([])
-    const agence = ref({})
-    const getAgences = () => {
-      axios.get('http://localhost:8000/api/agences', {
+    const voitures = ref([])
+    const voiture = ref({})
+
+    const getVoitures = () => {
+      axios.get('http://localhost:8000/api/voitures/agence/'+localStorage.getItem('agenceId'), {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response => {
-        agences.value = response.data.data
+        voitures.value = response.data.voitures
       }).catch(error => {
         if(error.message){
           window.location.href  = "/login";
         }
       })
     }
+    getVoitures()
 
-    getAgences()
-
-    const VoituresAgence = (id) => {
-      localStorage.setItem('agenceId', id);
-      window.location.href = '/agence/voitures';
+    const voitureLocation = (id) => {
+      localStorage.setItem('voitureId',id);
+      window.location.href = '/voiture/location';
     }
 
-    return {agences, agence, VoituresAgence}
+    return {voitures, voiture,getVoitures, voitureLocation}
   }
 });
 </script>
-
+<style>
+ion-list{
+  border-radius: 10px;
+  margin: 2px 0;
+}
+</style>
 <style lang="scss" scoped>
+
 .create {
   padding: 15px;
   background: #f3f3f3;
   border-radius: 8px;
   margin-bottom: 20px;
-
   form {
     display: flex;
     flex-direction: column;
-
-    input {
+    input{
+      margin: 5px 0;
       padding: 10px 10px;
       border-radius: 8px;
-      margin: 2.5px 0;
       border: 1px solid black;
+      background: black;
     }
 
     button {

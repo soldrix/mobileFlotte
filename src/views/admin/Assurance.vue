@@ -27,8 +27,8 @@
 <script>
 import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
-import AssuranceItem from "../components/AssuranceItem";
-import SelectVoiture from "../components/SelectVoiture";
+import AssuranceItem from "../../components/admin/AssuranceItem";
+import SelectVoiture from "../../components/admin/SelectVoiture";
 import axios from "axios";
 import {IonItem, IonList, IonSelect, toastController} from '@ionic/vue';
 

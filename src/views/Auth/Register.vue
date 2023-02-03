@@ -24,7 +24,12 @@ export default defineComponent({
   setup() {
     const user = ref({})
     const router = useRouter()
-
+    const verifConexion = () =>{
+      if(localStorage.getItem('token') !== null){
+        window.location.href = '/agences';
+      }
+    }
+    verifConexion();
     const register = () => {
       axios.post('http://localhost:8000/api/register', user.value)
           .then(response => {

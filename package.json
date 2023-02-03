@@ -25,6 +25,7 @@
     "jquery": "^3.6.3",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",
+    "v-calendar": "^3.0.0-alpha.8",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12"
   },

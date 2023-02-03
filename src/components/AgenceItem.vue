@@ -1,26 +1,13 @@
 <template>
   <div class="course">
     <div>
-      <h2 v-if="!toggleUpdate">Ville : {{ agence.ville }}</h2>
-      <div v-else class="div-modif">
-        <label for="ville">Ville : </label>
-        <input id="ville" type="text" :placeholder="agence.ville" v-model="agences.ville">
-      </div>
-      <h2 v-if="!toggleUpdate">Rue : {{ agence.rue }}</h2>
-      <div v-else class="div-modif">
-        <label for="rue">Rue : </label>
-        <input id="rue" type="text" :placeholder="agence.rue" v-model="agences.rue">
-      </div>
-      <h2 v-if="!toggleUpdate">Code postal : {{ agence.codePostal }}</h2>
-      <div v-else class="div-modif">
-        <label for="codepostal">Code postal : </label>
-        <input id="codepostal" type="text" :placeholder="agence.codePostal" v-model="agences.codePostal">
-      </div>
+      <h2>Ville : {{ agence.ville }}</h2>
+      <h2>Rue : {{ agence.rue }}</h2>
+      <h2>Code postal : {{ agence.codePostal }}</h2>
 
     </div>
     <div class="actions">
-      <button class="update" @click="updateAgence(agence.id)">Modifier</button>
-      <button class="delete" @click="deleteAgence(agence.id)">Supprimer</button>
+      <button class="update" @click="VoituresAgence(agence.id)">Continuer</button>
     </div>
   </div>
 </template>
@@ -37,25 +24,16 @@ export default defineComponent({
     }
   },
   setup(props, {emit}) {
-    const toggleUpdate = ref(false)
     const agences =ref({
       'id' : props.agence.id
     })
 
-    const updateAgence = () => {
-      if (toggleUpdate.value) {
-        emit('updateAgence',agences.value)
-        toggleUpdate.value = false
-      } else {
-        toggleUpdate.value = true
-      }
+    const VoituresAgence = (id) => {
+        emit('VoituresAgence',id)
     }
 
-    const deleteAgence = (courseId) => {
-      emit('deleteAgence', courseId)
-    }
 
-    return {updateAgence, deleteAgence, agences, toggleUpdate}
+    return {VoituresAgence, agences}
   }
 })
 </script>

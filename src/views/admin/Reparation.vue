@@ -28,10 +28,10 @@
 <script>
 import {IonItem, IonList, IonSelect, toastController} from '@ionic/vue';
 import {defineComponent, ref} from 'vue';
-import Container from "../components/Container";
-import SelectVoiture from "../components/SelectVoiture";
+import Container from "../../components/Container";
+import SelectVoiture from "../../components/admin/SelectVoiture";
 import axios from "axios";
-import ReparationItem from "../components/ReparationItem";
+import ReparationItem from "../../components/admin/ReparationItem";
 export default defineComponent({
   name: 'ReparationList',
   components: {

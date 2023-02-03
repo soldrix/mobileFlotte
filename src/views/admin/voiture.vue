@@ -43,7 +43,7 @@ import { IonItem, IonList, IonSelect, IonSelectOption,toastController } from '@i
 import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
 import SelectAgence from "@/components/SelectAgence";
-import VoitureItem from "../components/VoitureItem";
+import VoitureItem from "../../components/admin/VoitureItem";
 import axios from "axios";
 
 export default defineComponent({
