@@ -103,12 +103,12 @@ export default defineComponent({
 
     getLocations()
 
-    const addLocation = () => {
-      if(location.value.DateDebut){
-        location.value.DateDebut =reverseDate(location.value.DateDebut);
+    const addLocation = (datas) => {
+      if(datas.DateDebut){
+        location.value.DateDebut =reverseDate(datas.DateDebut);
       }
-      if(location.value.DateFin){
-        location.value.DateFin =reverseDate(location.value.DateFin);
+      if(datas.DateFin){
+        location.value.DateFin =reverseDate(datas.DateFin);
       }
       axios.post('http://localhost:8000/api/location/create', location.value, {
         headers: {

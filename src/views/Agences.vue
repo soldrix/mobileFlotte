@@ -1,9 +1,10 @@
 <template>
   <container title="Liste d'agence">
-    <div class="courses">
-      <Agence-item v-for="(agence, index) in agences" :key="index" :agence="agence"
+    <div v-if="agences.length > 0" class="courses">
+      <Agence-item  v-for="(agence, index) in agences" :key="index" :agence="agence"
                    @VoituresAgence="VoituresAgence"/>
     </div>
+    <p v-else class="text-center mt-5 text-danger">Aucune agences disponible veuillez revenir plus tard.</p>
   </container>
 </template>
 
@@ -12,6 +13,7 @@ import {defineComponent, ref} from 'vue';
 import Container from "../components/Container";
 import AgenceItem from "../components/AgenceItem";
 import axios from "axios";
+import {toastController} from "@ionic/vue";
 
 export default defineComponent({
   name: 'CoursesList',
@@ -31,11 +33,26 @@ export default defineComponent({
         agences.value = response.data.data
       }).catch(error => {
         if(error.message){
+          localStorage.removeItem('token')
           window.location.href  = "/login";
         }
       })
     }
-
+    const  presentToast = async (datas) => {
+      const  toast = await toastController.create({
+        message: datas ,
+        duration: 4500,
+        position: 'middle'
+      });
+      toast.onDidDismiss = () =>{
+        toast.del()
+      }
+      await toast.present();
+    };
+    if(localStorage.getItem('message') !== null){
+      presentToast(localStorage.getItem('message'))
+      localStorage.removeItem('message')
+    }
     getAgences()
 
     const VoituresAgence = (id) => {

@@ -15,23 +15,8 @@
         </ion-toolbar>
       </ion-header>
       <ion-content  class="ion-padding">
-        <ion-item lines="full" href="/voitures">
-          <ion-label>Voiture</ion-label>
-        </ion-item>
         <ion-item lines="full" href="/agences">
           <ion-label>Agence</ion-label>
-        </ion-item>
-        <ion-item lines="full" href="/entretiens">
-          <ion-label>Entretiens</ion-label>
-        </ion-item>
-        <ion-item lines="full" href="/reparations">
-          <ion-label>Reparations</ion-label>
-        </ion-item>
-        <ion-item lines="full" href="/assurances">
-          <ion-label>Assurances</ion-label>
-        </ion-item>
-        <ion-item lines="full" href="/locations">
-          <ion-label>Locations</ion-label>
         </ion-item>
         <ion-item lines="full" @click="logout" class="logout">
           <ion-label>Déconnexion</ion-label>
@@ -39,7 +24,7 @@
       </ion-content>
     </ion-menu>
     <ion-content id="main-content">
-      <main>
+      <main class="pt-5">
         <slot></slot>
       </main>
     </ion-content>
@@ -72,12 +57,12 @@ export default defineComponent({
     }
   },setup(){
     const logout = () =>{
-      console.log('test')
-      axios.post('http://localhost:8000/logout',{
+      axios.post('http://localhost:8000/api/logout',{},{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then( () =>{
+        localStorage.removeItem('token')
         window.location.href = '/login';
       }).catch(error => {
         if(error.message){

@@ -4,6 +4,7 @@ import Register from '../views/Auth/Register.vue'
 import Login from '@/views/Auth/Login.vue'
 import voiture from '../views/voitures';
 import voitureLocation from "../views/voitureLocation";
+import forgotPassword from "../views/forgotPassword";
 // import voiture from "../views/admin/voiture";
 // import entretien from "../views/admin/Entretiens";
 // import Reparation from "../views/admin/Reparation";
@@ -55,6 +56,11 @@ const routes = [
   //   component: Location
   // },
   {
+    path: '/forgot-password',
+    name: 'forgot-password',
+    component: forgotPassword
+  },
+  {
     path: '/register',
     name: 'Register',
     component: Register
@@ -72,7 +78,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('token') == null && to.name != 'Login' && to.name != 'Register') {
+  if (localStorage.getItem('token') == null && to.name != 'Login' && to.name != 'Register' && to.name != 'forgot-password') {
     next('/login')
   }
   else next()

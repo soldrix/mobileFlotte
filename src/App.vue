@@ -7,7 +7,6 @@
 <script>
 import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { defineComponent } from 'vue';
-
 export default defineComponent({
   name: 'App',
   components: {
@@ -16,3 +15,12 @@ export default defineComponent({
   }
 });
 </script>
+<style>
+@import '~bootstrap/dist/css/bootstrap.css';
+.is-invalid{
+  border: 1px solid red;
+}
+input{
+  outline: transparent;
+}
+</style>

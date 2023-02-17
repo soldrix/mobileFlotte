@@ -1,14 +1,6 @@
 <template>
   <container title="Liste des location">
-<!--    <div class="create">-->
-<!--      <form>-->
-<!--        <input type="text" placeholder="Date de debut" v-model="location.DateDebut">-->
-<!--        <input type="text" placeholder="date de fin" v-model="location.DateFin">-->
-<!--        <input type="text" placeholder="Montant total" v-model="location.montant">-->
-<!--        <button @click.prevent="addLocation">Ajouter</button>-->
-<!--      </form>-->
-<!--    </div>-->
-    <form-picker/>
+    <form-picker @addLocation="addLocation"/>
   </container>
 </template>
 
@@ -17,28 +9,18 @@ import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
 import FormPicker from "../components/FormPicker";
 import axios from "axios";
+import router from "../router";
 export default defineComponent({
   name: 'AssuranceList',
   components: {
     FormPicker,
     Container,
-  },data() {
-    return {
-      range: {
-        start: new Date(2020, 0, 6),
-        end: new Date(2020, 0, 23),
-      },
-      masks: {
-        input: 'YYYY-MM-DD h:mm A',
-      },
-    };
   },
   setup() {
     const locations = ref([])
     const location = ref({})
     const voitures = ref([])
     const voiture = ref({})
-
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');
@@ -52,7 +34,6 @@ export default defineComponent({
         return d;
       }
     };
-
     const getVoitures = () => {
       axios.get('http://localhost:8000/api/voitures', {
         headers: {
@@ -71,12 +52,18 @@ export default defineComponent({
 
 
 
-    const addLocation = () => {
-      if(location.value.DateDebut){
-        location.value.DateDebut =reverseDate(location.value.DateDebut);
+    const addLocation = (datas) => {
+      if(datas.DateDebut){
+        location.value.DateDebut =reverseDate(datas.DateDebut);
       }
-      if(location.value.DateFin){
-        location.value.DateFin =reverseDate(location.value.DateFin);
+      if(datas.DateFin){
+        location.value.DateFin =reverseDate(datas.DateFin);
+      }
+      if(datas.montant){
+        location.value.montant = datas.montant;
+      }
+      if(datas.id_voiture){
+        location.value.id_voiture = datas.id_voiture;
       }
       axios.post('http://localhost:8000/api/location/create', location.value, {
         headers: {
@@ -84,6 +71,8 @@ export default defineComponent({
         }
       }).then(() => {
         location.value = {}
+        localStorage.setItem('message', 'La location à été enregistrer avec succès.')
+        router.push('/agences')
       })
     }
 
