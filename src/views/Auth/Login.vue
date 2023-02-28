@@ -19,10 +19,10 @@
 
 <script>
 import {defineComponent, ref} from "vue";
-import {useRouter} from "vue-router";
 import Container from "@/components/Container";
 import axios from "axios";
-
+import {toastController} from "@ionic/vue";
+import router from "../../router";
 export default defineComponent({
   name: "AuthLogin",
   components: {
@@ -30,7 +30,7 @@ export default defineComponent({
   },
   setup() {
     const user = ref({})
-    const router = useRouter()
+
     const msg = ref("");
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
@@ -41,10 +41,26 @@ export default defineComponent({
     const register = () => {
       router.push('/register')
     };
+    const  presentToast = async (datas) => {
+      const  toast = await toastController.create({
+        message: datas ,
+        duration: 4500,
+        position: 'middle'
+      });
+      toast.onDidDismiss = () =>{
+        toast.del()
+      }
+      await toast.present();
+    };
+    if(localStorage.getItem('deleteMsg') !== null){
+      presentToast(localStorage.getItem('deleteMsg'))
+      localStorage.clear()
+    }
     const login = () => {
       axios.post('http://localhost:8000/api/login', user.value)
           .then(response => {
             localStorage.setItem('token', response.data.access_token)
+            localStorage.setItem('id_user', response.data.id_user)
             user.value = {}
             msg.value = "";
             router.push('/agences')

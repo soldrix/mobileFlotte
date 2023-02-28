@@ -1,6 +1,7 @@
 <template>
   <container title="Liste des location">
-    <form-picker @addLocation="addLocation"/>
+    <form-picker @addLocation="addLocation" @returnView="returnView" :msgErrors="msgErrors"/>
+
   </container>
 </template>
 
@@ -17,10 +18,7 @@ export default defineComponent({
     Container,
   },
   setup() {
-    const locations = ref([])
-    const location = ref({})
-    const voitures = ref([])
-    const voiture = ref({})
+    const msgErrors =ref([]);
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');
@@ -34,90 +32,41 @@ export default defineComponent({
         return d;
       }
     };
-    const getVoitures = () => {
-      axios.get('http://localhost:8000/api/voitures', {
-        headers: {
-          "Authorization": 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        voitures.value = response.data
-      }).catch(error => {
-        if(error.message){
-          window.location.href  = "/login";
-        }
-        console.log(error)
-      })
-    }
-    getVoitures()
-
-
 
     const addLocation = (datas) => {
       if(datas.DateDebut){
-        location.value.DateDebut =reverseDate(datas.DateDebut);
+        datas.DateDebut = reverseDate(datas.DateDebut)
+      }if(datas.DateFin){
+        datas.DateFin = reverseDate(datas.DateFin)
       }
-      if(datas.DateFin){
-        location.value.DateFin =reverseDate(datas.DateFin);
-      }
-      if(datas.montant){
-        location.value.montant = datas.montant;
-      }
-      if(datas.id_voiture){
-        location.value.id_voiture = datas.id_voiture;
-      }
-      axios.post('http://localhost:8000/api/location/create', location.value, {
+      axios.post('http://localhost:8000/api/location/create', datas, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(() => {
-        location.value = {}
         localStorage.setItem('message', 'La location à été enregistrer avec succès.')
         router.push('/agences')
+      }).catch(error=>{
+        if(error.response.data.message){
+          localStorage.clear();
+          router.push('Login');
+        }
+        msgErrors.value = error.response.data.error;
+        document.querySelectorAll('.form-control').forEach(function (elm) {
+          elm.classList.value = 'form-control';
+        })
+        for (let i = 0; i < Object.keys(msgErrors.value).length; i++) {
+          document.getElementById(Object.keys(msgErrors.value)[i]).classList.value = 'form-control is-invalid';
+        }
       })
     }
 
+    const returnView = () =>{
+      router.push('/agence/voitures')
+    };
 
-    return {locations, location, addLocation,voitures,voiture}
+    return {addLocation,returnView,msgErrors}
   }
 });
 </script>
 
-<style lang="scss" scoped>
-.create {
-  padding: 15px;
-  background: #f3f3f3;
-  border-radius: 8px;
-  margin-bottom: 20px;
-
-  form {
-    display: flex;
-    flex-direction: column;
-
-    input {
-      padding: 10px 10px;
-      border-radius: 8px;
-      margin: 2.5px 0;
-      border: 1px solid black;
-    }
-
-    button {
-      padding: 10px 20px;
-      background: #b3b3ff;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-  }
-}
-
-.courses {
-  padding: 15px;
-  background: #232121;
-  border-radius: 8px;
-
-  & > div:not(& > div:last-child) {
-    border-bottom: 1px solid #d5d5d5;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-  }
-}
-</style>

@@ -1,10 +1,17 @@
 <template>
   <container title="Liste d'agence">
-    <div v-if="agences.length > 0" class="courses">
-      <Agence-item  v-for="(agence, index) in agences" :key="index" :agence="agence"
-                   @VoituresAgence="VoituresAgence"/>
+    <div class="col-auto d-flex">
+      <input type="text" class="form-control" v-model="searchVal">
+      <button class="btn btn-outline-primary mx-2" @click="searchagence">Rechercher</button>
+      <button class="btn btn-outline-danger mx-2" @click="getAgences">réinitialiser</button>
     </div>
+    <div v-if="agences.length > 0">
+        <Agence-item  class="courses mt-3"  v-for="(agence, index) in agences" :key="index" :agence="agence"
+                      @VoituresAgence="VoituresAgence"/>
+    </div>
+    <h2 class="text-center" v-else-if="statusSearch===false">Malheureusement, aucun résultat n'a été trouvé. Veuillez vérifier l'orthographe et réessayer..</h2>
     <p v-else class="text-center mt-5 text-danger">Aucune agences disponible veuillez revenir plus tard.</p>
+
   </container>
 </template>
 
@@ -14,6 +21,7 @@ import Container from "../components/Container";
 import AgenceItem from "../components/AgenceItem";
 import axios from "axios";
 import {toastController} from "@ionic/vue";
+import router from "../router";
 
 export default defineComponent({
   name: 'CoursesList',
@@ -24,7 +32,10 @@ export default defineComponent({
   setup() {
     const agences = ref([])
     const agence = ref({})
+    const searchVal = ref("");
+    const statusSearch = ref(true);
     const getAgences = () => {
+      searchVal.value = "";
       axios.get('http://localhost:8000/api/agences', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
@@ -32,9 +43,9 @@ export default defineComponent({
       }).then(response => {
         agences.value = response.data.data
       }).catch(error => {
-        if(error.message){
-          localStorage.removeItem('token')
-          window.location.href  = "/login";
+        if(error.response.data.message){
+          localStorage.clear();
+          router.push('Login');
         }
       })
     }
@@ -59,8 +70,24 @@ export default defineComponent({
       localStorage.setItem('agenceId', id);
       window.location.href = '/agence/voitures';
     }
-
-    return {agences, agence, VoituresAgence}
+    const searchagence = ()=>{
+      axios.get("http://localhost:8000/api/agences/search/"+searchVal.value,{
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+      .then(response=>{
+        statusSearch.value = response.data.status;
+        agences.value =  (response.data.research.length > 0) ? response.data.research : [];
+      })
+      .catch(error=>{
+        if(error.response.data.message){
+          localStorage.clear();
+          router.push('Login');
+        }
+      })
+    };
+    return {agences, agence, VoituresAgence, searchagence,searchVal,statusSearch,getAgences}
   }
 });
 </script>

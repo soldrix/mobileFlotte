@@ -8,7 +8,7 @@
         <ion-title>{{ title }}</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-menu content-id="main-content">
+    <ion-menu v-if="token !== null" content-id="main-content">
       <ion-header>
         <ion-toolbar>
           <ion-title>Menu Content</ion-title>
@@ -17,6 +17,12 @@
       <ion-content  class="ion-padding">
         <ion-item lines="full" href="/agences">
           <ion-label>Agence</ion-label>
+        </ion-item>
+        <ion-item lines="full" href="/locations">
+          <ion-label>Mes locations</ion-label>
+        </ion-item>
+        <ion-item lines="full" href="/profil">
+          <ion-label>Mon profil</ion-label>
         </ion-item>
         <ion-item lines="full" @click="logout" class="logout">
           <ion-label>Déconnexion</ion-label>
@@ -35,6 +41,7 @@
 import {defineComponent} from "vue";
 import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonMenu,IonMenuButton,IonButtons,IonItem,IonLabel} from "@ionic/vue";
 import axios from "axios";
+import router from "@/router";
 
 export default defineComponent({
   name: "ContainerComponent",
@@ -56,6 +63,7 @@ export default defineComponent({
       required: true
     }
   },setup(){
+    const token = localStorage.getItem('token');
     const logout = () =>{
       axios.post('http://localhost:8000/api/logout',{},{
         headers: {
@@ -65,13 +73,13 @@ export default defineComponent({
         localStorage.removeItem('token')
         window.location.href = '/login';
       }).catch(error => {
-        if(error.message){
-          window.location.href  = "/login";
+        if(error.response.data.message){
+          localStorage.clear();
+          router.push('Login');
         }
-        console.log(error)
       })
     }
-    return {logout};
+    return {logout,token};
   }
 })
 </script>
