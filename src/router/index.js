@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import Agence from '../views/Agences.vue'
 import Register from '../views/Auth/Register.vue'
-import Login from '@/views/Auth/Login.vue'
+import Login from '../views/Auth/Login.vue'
 import voiture from '../views/voitures';
 import voitureLocation from "../views/voitureLocation";
 import forgotPassword from "../views/forgotPassword";
+import profil from "../views/profil";
+import resetPassword from "../views/resetPassword";
+import locations from "../views/locations";
 // import voiture from "../views/admin/voiture";
 // import entretien from "../views/admin/Entretiens";
 // import Reparation from "../views/admin/Reparation";
@@ -30,35 +33,25 @@ const routes = [
     name: 'location',
     component: voitureLocation
   },
-  // {
-  //   path: '/voitures',
-  //   name: 'Voiture',
-  //   component: voiture
-  // },
-  // {
-  //   path: '/entretiens',
-  //   name: 'Entretien',
-  //   component: entretien
-  // },
-  // {
-  //   path: '/reparations',
-  //   name: 'Reparation',
-  //   component: Reparation
-  // },
-  // {
-  //   path: '/assurances',
-  //   name: 'Assurance',
-  //   component: Assurance
-  // },
-  // {
-  //   path: '/locations',
-  //   name: 'Location',
-  //   component: Location
-  // },
+  {
+    path: '/profil',
+    name: 'Profil',
+    component: profil
+  },
+  {
+    path: '/locations',
+    name: 'Location',
+    component: locations
+  },
   {
     path: '/forgot-password',
     name: 'forgot-password',
     component: forgotPassword
+  },
+  {
+    path:'/reset-password',
+    name:'reset-password',
+    component: resetPassword
   },
   {
     path: '/register',
@@ -78,7 +71,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('token') == null && to.name != 'Login' && to.name != 'Register' && to.name != 'forgot-password') {
+  if (localStorage.getItem('token') == null && to.name != 'Login' && to.name != 'Register' && to.name != 'forgot-password' && to.name != 'reset-password') {
     next('/login')
   }
   else next()

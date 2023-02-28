@@ -23,4 +23,7 @@ export default defineComponent({
 input{
   outline: transparent;
 }
+.h-fit{
+  height: fit-content;
+}
 </style>

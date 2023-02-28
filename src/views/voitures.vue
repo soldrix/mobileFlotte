@@ -1,9 +1,16 @@
 <template>
   <container title="Liste de voiture">
-    <div class="courses">
-      <VoitureItem v-for="(voiture, index) in voitures" :key="index" :voiture="voiture"
+    <div class="col-auto d-flex">
+      <input type="text" class="form-control" v-model="searchVal">
+      <button class="btn btn-outline-primary mx-2" @click="searchVoiture">Rechercher</button>
+      <button class="btn btn-outline-danger mx-2" @click="getVoitures">réinitialiser</button>
+    </div>
+    <div v-if="voitures.length > 0">
+      <VoitureItem class="courses mt-2" v-for="(voiture, index) in voitures" :key="index" :voiture="voiture"
                   @voitureLocation="voitureLocation"/>
     </div>
+    <h2 class="text-center" v-else-if="statusSearch===false">Malheureusement, aucun résultat n'a été trouvé. Veuillez vérifier l'orthographe et réessayer..</h2>
+    <p v-else class="text-center mt-5 text-danger">Aucune voitures disponible veuillez revenir plus tard.</p>
   </container>
 </template>
 
@@ -12,6 +19,7 @@ import {defineComponent, ref} from 'vue';
 import Container from "@/components/Container";
 import VoitureItem from "../components/Voitureitem";
 import axios from "axios";
+import router from "../router";
 
 export default defineComponent({
   name: 'CoursesList',
@@ -20,10 +28,12 @@ export default defineComponent({
     VoitureItem
   },
   setup() {
-    const voitures = ref([])
-    const voiture = ref({})
-
+    const voitures = ref([]);
+    const voiture = ref({});
+    const searchVal = ref('');
+    const statusSearch = ref(true);
     const getVoitures = () => {
+      searchVal.value = "";
       axios.get('http://localhost:8000/api/voitures/agence/'+localStorage.getItem('agenceId'), {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
@@ -31,8 +41,9 @@ export default defineComponent({
       }).then(response => {
         voitures.value = response.data.voitures
       }).catch(error => {
-        if(error.message){
-          window.location.href  = "/login";
+        if(error.response.data.message){
+          localStorage.clear();
+          router.push('Login');
         }
       })
     }
@@ -42,8 +53,25 @@ export default defineComponent({
       localStorage.setItem('voitureId',id);
       window.location.href = '/voiture/location';
     }
+    const searchVoiture = ()=>{
+      axios.get("http://localhost:8000/api/voitures/search/"+searchVal.value,{
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      })
+      .then(response=>{
+        statusSearch.value = response.data.status;
+        voitures.value =  (response.data.research.length > 0) ? response.data.research : [];
+      })
+      .catch(error=>{
+        if(error.response.data.message){
+          localStorage.clear();
+          router.push('Login');
+        }
+      })
+    };
 
-    return {voitures, voiture,getVoitures, voitureLocation}
+    return {voitures, voiture,getVoitures, voitureLocation,searchVoiture,statusSearch,searchVal}
   }
 });
 </script>

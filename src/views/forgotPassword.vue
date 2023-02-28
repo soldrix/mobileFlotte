@@ -16,10 +16,9 @@
 
 <script>
 import {defineComponent, ref} from "vue";
-import {useRouter} from "vue-router";
 import Container from "@/components/Container";
 import axios from "axios";
-
+import router from "../router";
 export default defineComponent({
   name: "AuthLogin",
   components: {
@@ -27,12 +26,11 @@ export default defineComponent({
   },
   setup() {
     const user = ref({})
-    const router = useRouter()
     const message = ref("");
     const msgErrors =ref("");
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
-        window.location.href = '/agences';
+        router.push('/agences');
       }
     }
     verifConexion();

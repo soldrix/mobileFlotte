@@ -1,5 +1,21 @@
-
 <template>
+  <div class="col-auto bg-dark py-4 px-5" id="toto">
+
+  </div>
+  <div class="px-3">
+    <h2>{{voiture.marque}} {{voiture.model}} ou similaire | {{voiture.type}}</h2>
+    <ul class="d-flex flex-wrap justify-content-around list-unstyled">
+      <li>
+        <p>{{voiture.nbPorte}} Portes</p>
+      </li>
+      <li>
+        <p>{{voiture.prix}}€ | jour</p>
+      </li>
+      <li>
+        <p id="open-modal">Voir plus ...</p>
+      </li>
+    </ul>
+  </div>
   <DatePicker v-model="range" mode="date" is-range :disabled-dates="dateLocation">
     <template v-slot:="{inputValue, inputEvents}">
       <div class="input-group my-3">
@@ -13,40 +29,100 @@
           <label for="DateFin" class="text-black">Date de Fin</label>
         </div>
       </div>
-      <button class="btn btn-outline-primary" @click="addLocation(inputValue.start,inputValue.end)">Louer</button>
+      <p class="text-danger text-center">{{(msgErrors.DateDebut === undefined) ? '' : msgErrors.DateDebut[0]}}</p>
+      <p class="text-danger text-center">{{(msgErrors.DateFin === undefined) ? '' : msgErrors.DateFin[0]}}</p>
+
+
+      <button class="btn btn-danger" @click="returnView">Retour</button>
+      <button class="btn btn-outline-primary mx-3" @click="addLocation(inputValue.start,inputValue.end)">Louer</button>
     </template>
   </DatePicker>
+  <ion-modal ref="modal" trigger="open-modal">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Plus d'informations</ion-title>
+        <ion-buttons slot="end">
+          <ion-button :strong="true" @click="cancel()">X</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ul class="list-unstyled mt-3 px-4">
+        <li>
+          <p>Marque : {{voiture.marque}}</p>
+        </li>
+        <li>
+          <p>Model : {{voiture.model}}</p>
+        </li>
+        <li>
+          <p>Carburant : {{voiture.carburant}}</p>
+        </li>
+        <li>
+          <p>Type de voiture : {{voiture.type}}</p>
+        </li>
+        <li>
+          <p>Sièges : {{voiture.nbPlace}}</p>
+        </li>
+        <li>
+          <p>Portes : {{voiture.nbPorte}}</p>
+        </li>
+        <li>
+          <p>puissances : {{voiture.puissance}} ch</p>
+        </li>
+      </ul>
+    </ion-content>
+  </ion-modal>
 </template>
 <script>
 import {ref, reactive, defineComponent} from 'vue';
 import { DatePicker } from 'v-calendar';
 import axios from "axios";
+import {IonButton, IonButtons, IonContent, IonHeader, IonModal, IonTitle, IonToolbar} from "@ionic/vue";
 import router from "../router";
 
 export default defineComponent({
-  name: 'App',
+  name: 'FormPickerItem',
+  emits: ["addLocation",'returnView'],
+  props:{
+    msgErrors:{
+      type: Object,
+      require:true
+    }
+  },
   components: {
-    DatePicker
+    DatePicker,
+    IonModal,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButtons,
+    IonButton,
+    IonContent
   },setup(prop,{emit}){
     const id_voiture = localStorage.getItem('voitureId');
     const date = ref(new Date())
     date.value.setDate(Number(date.value.getDate()))
-    const range = reactive({
+    const range = reactive({})
+    const voiture = ref([])
 
-    })
-    const reverseDate =  (d) => {
-      if(d.match('-')){
-        d = d.split('-');
-        return d[2] + '/' + d[1] + '/' + d[0]
-      }
-      if(d.match('/')) {
-        d = d.split('/');
-        return d[2] + '-' + d[1] + '-' + d[0]
-      }
-      else {
-        return d;
-      }
+    const getVoiture = ()=>{
+      axios.get('http://localhost:8000/api/voiture/'+localStorage.getItem('voitureId'),{
+        headers: {
+          "Authorization": 'Bearer ' + localStorage.getItem('token')
+        }
+      }).then(response =>{
+        voiture.value = response.data.voiture;
+        let test = document.getElementById('toto');
+        test.style.backgroundImage ="url('http://localhost:8000/api/image/"+response.data.voiture.image+"')";
+      }).catch(error=>{
+        if(error.message){
+          localStorage.clear();
+          router.push('Login');
+        }
+      })
+
     };
+    getVoiture()
     const dateLocation = ref([]);
     const location = () =>{
       axios.get('http://localhost:8000/api/locations',{
@@ -64,32 +140,48 @@ export default defineComponent({
         })
         dateLocation.value = dateArray;
       }).catch(errors =>{
-        if(errors){
-          router.push('/login');
+        if(errors.response.data.message){
+          localStorage.clear();
+          router.push('Login');
         }
       })
     };
     location()
     const addLocation = (dateD,dateF) =>{
-      axios.get('http://localhost:8000/api/voiture/'+id_voiture,{
-        headers: {
-          "Authorization": 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response =>{
-        var date1 = new Date(reverseDate(dateD));
-        var date2 = new Date(reverseDate(dateF));
-        // To calculate the time difference of two dates
-        var Difference_In_Time = date2.getTime() - date1.getTime();
-        var Days = Difference_In_Time / (1000 * 3600 * 24);
-        let price = parseInt(response.data.voiture.prix) * parseInt(Days + 1);
-        emit('addLocation',{DateDebut:dateD,DateFin:dateF,id_voiture:id_voiture,montant:price})
-      })
-
+      emit('addLocation',{DateDebut:dateD,DateFin:dateF,id_voiture:id_voiture,prix:voiture.value.prix})
     };
-    return {range,date,dateLocation,addLocation};
+    const returnView = () =>{
+      emit('returnView')
+    } ;
+
+    return {range,date,dateLocation,addLocation,returnView,voiture};
+  },methods:{
+    cancel() {
+      this.$refs.modal.$el.dismiss(null, 'cancel');
+    },
   }
 });
 </script>
 <style scoped>
 @import '~v-calendar/dist/style.css';
+</style>
+<style lang="scss" scoped>
+#toto{
+  min-height: 400px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.courses {
+  padding: 15px;
+  background: #232121;
+  border-radius: 8px;
+
+  & > div:not(& > div:last-child) {
+    border-bottom: 1px solid #d5d5d5;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+}
 </style>

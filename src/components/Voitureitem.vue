@@ -1,20 +1,15 @@
 <template>
 
   <div class="course">
-    <div>
+    <div class="col-auto d-flex flex-column justify-content-center">
       <img :src="'http://localhost:8000/api/image/'+voiture.image" alt="">
       <h2>Marque : {{voiture.marque}}</h2>
       <h2>Model : {{voiture.model}}</h2>
       <h2>Type : {{voiture.type}}</h2>
-      <h2 >Puissance : {{voiture.puissance}}</h2>
-      <h2>Carburant : {{voiture.carburant}}</h2>
       <h2>Nombre de porte : {{voiture.nbPorte}}</h2>
-      <h2>Nombre de place : {{voiture.nbPlace}}</h2>
       <h2>Prix par jour : {{voiture.prix}}€</h2>
     </div>
-    <div class="actions">
-      <button class="update" @click="voitureLocation(voiture.id)">Continuer</button>
-    </div>
+      <button class="btn btn-primary" @click="voitureLocation(voiture.id)">Continuer</button>
   </div>
 
 </template>
@@ -50,55 +45,6 @@ export default defineComponent({
 
 
     return {voitureLocation,voitureData,reverseDate}
-  },methods:{
-
-
   }
 })
 </script>
-
-<style lang="scss" scoped>
-.div-modif{
-  display: flex;
-  justify-content: space-between;
-  margin: 10px 0;
-  align-items: center;
-}
-.course {
-  h2 {
-    margin: 0;
-    margin-bottom: 10px;
-  }
-
-  p {
-    margin: 0;
-  }
-
-  .actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-
-    a {
-      padding: 10px 20px;
-      border-radius: 8px;
-      color: #000;
-      background: lightgray;
-      text-decoration: none;
-    }
-
-    button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      color: #fff;
-
-      &.update {
-        background: #54a5ff;
-      }
-      &.delete {
-        background: #ff6969;
-      }
-    }
-  }
-}
-</style>
