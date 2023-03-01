@@ -194,7 +194,7 @@ export default defineComponent({
       }).catch(error =>{
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     };
@@ -215,12 +215,12 @@ export default defineComponent({
                   }
                 }).then(response =>{
                     localStorage.setItem('deleteMsg',response.data.message)
-                    router.push('/login');
+                    router.replace('/login');
                 })
                 .catch(error =>{
                   if(error.response.data.message){
                     localStorage.clear();
-                    router.push('Login');
+                    router.replace('/login');
                   }
                 })
               }
@@ -283,7 +283,7 @@ export default defineComponent({
             }).catch(error => {
               if(error.response.data.message){
                 localStorage.clear();
-                router.push('Login');
+                router.replace('/login');
               }
               this.msg = error.response.data.error;
               document.querySelectorAll('.inputForm').forEach(function (elm) {
@@ -303,7 +303,7 @@ export default defineComponent({
             }).catch(error => {
               if(error.response.data.message){
                 localStorage.clear();
-                router.push('Login');
+                router.replace('/login');
               }
               this.msg = error.response.data.error;
               document.querySelectorAll('.inputForm').forEach(function (elm) {
@@ -323,7 +323,7 @@ export default defineComponent({
             }).catch(error => {
               if(error.response.data.message){
                 localStorage.clear();
-                router.push('Login');
+                router.replace('/login');
               }
               this.msg = error.response.data.error;
               document.querySelectorAll('.inputForm').forEach(function (elm) {
@@ -343,7 +343,7 @@ export default defineComponent({
             }).catch(error => {
               if(error.response.data.message){
                 localStorage.clear();
-                router.push('Login');
+                router.replace('/login');
               }
               this.msg = error.response.data.error;
               document.querySelectorAll('.inputForm').forEach(function (elm) {

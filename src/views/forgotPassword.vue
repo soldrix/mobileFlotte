@@ -30,12 +30,12 @@ export default defineComponent({
     const msgErrors =ref("");
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
-        router.push('/agences');
+        router.replace('/agences');
       }
     }
     verifConexion();
     const login = () => {
-      router.push('/login')
+      router.replace('/login')
     }
     const forgotPassword = () =>{
       axios.post('http://localhost:8000/api/forget-password',user.value)

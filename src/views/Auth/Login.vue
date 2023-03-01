@@ -30,16 +30,15 @@ export default defineComponent({
   },
   setup() {
     const user = ref({})
-
     const msg = ref("");
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
-        window.location.href = '/agences';
+        router.replace('/agences');
       }
     }
     verifConexion();
     const register = () => {
-      router.push('/register')
+      router.replace('/register')
     };
     const  presentToast = async (datas) => {
       const  toast = await toastController.create({
@@ -63,7 +62,7 @@ export default defineComponent({
             localStorage.setItem('id_user', response.data.id_user)
             user.value = {}
             msg.value = "";
-            router.push('/agences')
+            router.replace('/agences')
             document.querySelectorAll('.inputForm').forEach(function (elm) {
               elm.classList.value = 'inputForm';
             })

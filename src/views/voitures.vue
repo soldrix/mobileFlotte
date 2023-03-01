@@ -43,7 +43,7 @@ export default defineComponent({
       }).catch(error => {
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     }
@@ -51,7 +51,7 @@ export default defineComponent({
 
     const voitureLocation = (id) => {
       localStorage.setItem('voitureId',id);
-      window.location.href = '/voiture/location';
+      router.replace('/voiture/location')
     }
     const searchVoiture = ()=>{
       axios.get("http://localhost:8000/api/voitures/search/"+searchVal.value,{
@@ -66,7 +66,7 @@ export default defineComponent({
       .catch(error=>{
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     };

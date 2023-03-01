@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {defineComponent, ref} from "vue";
+import {defineComponent} from "vue";
 export default defineComponent({
   name: "VoitureItem",
   props: {
@@ -25,10 +25,6 @@ export default defineComponent({
     }
   },
   setup(props, {emit}) {
-    const voitureData = ref({
-      'id' : props.voiture.id
-    });
-
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');
@@ -44,7 +40,7 @@ export default defineComponent({
     }
 
 
-    return {voitureLocation,voitureData,reverseDate}
+    return {voitureLocation,reverseDate}
   }
 })
 </script>

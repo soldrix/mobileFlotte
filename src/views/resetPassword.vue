@@ -37,12 +37,6 @@ export default defineComponent({
           .then(response =>{
             user.value = response.data.data[0];
           })
-          .catch(error =>{
-            if(error.response.data.success === false){
-              localStorage.clear();
-              router.push('Login');
-            }
-          })
     }
     getUser();
     const resetPassword = (id)=>{
@@ -62,7 +56,7 @@ export default defineComponent({
         })
     }
     const goLogin = ()=>{
-      router.push('/login');
+      router.replace('/login');
     };
     return {user,data,msg,resetPassword,goLogin,successMsg}
   }
