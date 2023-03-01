@@ -1,5 +1,5 @@
 <template>
-  <div class="col-auto bg-dark py-4 px-5" id="toto">
+  <div class="col-auto bg-dark py-4 px-5" id="background">
 
   </div>
   <div class="px-3">
@@ -67,7 +67,7 @@
           <p>Portes : {{voiture.nbPorte}}</p>
         </li>
         <li>
-          <p>puissances : {{voiture.puissance}} ch</p>
+          <p>Puissances : {{voiture.puissance}} ch</p>
         </li>
       </ul>
     </ion-content>
@@ -112,12 +112,12 @@ export default defineComponent({
         }
       }).then(response =>{
         voiture.value = response.data.voiture;
-        let test = document.getElementById('toto');
+        let test = document.getElementById('background');
         test.style.backgroundImage ="url('http://localhost:8000/api/image/"+response.data.voiture.image+"')";
       }).catch(error=>{
-        if(error.message){
+        if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
 
@@ -142,7 +142,7 @@ export default defineComponent({
       }).catch(errors =>{
         if(errors.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     };
@@ -165,23 +165,11 @@ export default defineComponent({
 <style scoped>
 @import '~v-calendar/dist/style.css';
 </style>
-<style lang="scss" scoped>
-#toto{
+<style scoped>
+#background{
   min-height: 400px;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-}
-
-.courses {
-  padding: 15px;
-  background: #232121;
-  border-radius: 8px;
-
-  & > div:not(& > div:last-child) {
-    border-bottom: 1px solid #d5d5d5;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-  }
 }
 </style>

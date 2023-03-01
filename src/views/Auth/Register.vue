@@ -46,7 +46,7 @@ export default defineComponent({
     const msgErrors = ref({});
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
-        window.location.href = '/agences';
+        router.replace('/agences');
       }
     }
     verifConexion();

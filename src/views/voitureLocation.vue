@@ -45,11 +45,11 @@ export default defineComponent({
         }
       }).then(() => {
         localStorage.setItem('message', 'La location à été enregistrer avec succès.')
-        router.push('/agences')
+        router.replace('/agences')
       }).catch(error=>{
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
         msgErrors.value = error.response.data.error;
         document.querySelectorAll('.form-control').forEach(function (elm) {
@@ -62,7 +62,7 @@ export default defineComponent({
     }
 
     const returnView = () =>{
-      router.push('/agence/voitures')
+      router.replace('/agence/voitures')
     };
 
     return {addLocation,returnView,msgErrors}

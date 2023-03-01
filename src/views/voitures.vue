@@ -9,7 +9,7 @@
       <VoitureItem class="courses mt-2" v-for="(voiture, index) in voitures" :key="index" :voiture="voiture"
                   @voitureLocation="voitureLocation"/>
     </div>
-    <h2 class="text-center" v-else-if="statusSearch===false">Malheureusement, aucun résultat n'a été trouvé. Veuillez vérifier l'orthographe et réessayer..</h2>
+    <h2 class="text-center" v-else-if="statusSearch===false">Malheureusement, aucun résultat n'a été trouvé. Veuillez vérifier l'orthographe et réessayer.</h2>
     <p v-else class="text-center mt-5 text-danger">Aucune voitures disponible veuillez revenir plus tard.</p>
   </container>
 </template>
@@ -43,7 +43,7 @@ export default defineComponent({
       }).catch(error => {
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     }
@@ -51,7 +51,7 @@ export default defineComponent({
 
     const voitureLocation = (id) => {
       localStorage.setItem('voitureId',id);
-      window.location.href = '/voiture/location';
+      router.replace('/voiture/location')
     }
     const searchVoiture = ()=>{
       axios.get("http://localhost:8000/api/voitures/search/"+searchVal.value,{
@@ -66,7 +66,7 @@ export default defineComponent({
       .catch(error=>{
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     };

@@ -8,11 +8,6 @@ import forgotPassword from "../views/forgotPassword";
 import profil from "../views/profil";
 import resetPassword from "../views/resetPassword";
 import locations from "../views/locations";
-// import voiture from "../views/admin/voiture";
-// import entretien from "../views/admin/Entretiens";
-// import Reparation from "../views/admin/Reparation";
-// import Assurance from "../views/admin/Assurance";
-// import Location from "../views/admin/Location";
 const routes = [
   {
     path: '/',
@@ -30,7 +25,7 @@ const routes = [
   },
   {
     path: '/voiture/location',
-    name: 'location',
+    name: 'voiture-location',
     component: voitureLocation
   },
   {

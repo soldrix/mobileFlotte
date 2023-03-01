@@ -1,6 +1,6 @@
 <template>
   <div class="locations my-2">
-    <h2>Numéro de comandes : <span>numero</span></h2>
+    <h2>Numéro de comandes : <span>{{ location.commandeNumber }}</span></h2>
     <p>Date de debut : {{reverseDate(location.DateDebut)}}</p>
     <p>Date de fin : {{reverseDate(location.DateFin)}}</p>
     <p>Montant de la location : {{location.montant}}€</p>
@@ -30,7 +30,7 @@ export default defineComponent({
 
     const goVoiture = (id)=>{
       localStorage.setItem('voitureId',id)
-      router.push('voiture/location')
+      router.replace('/voiture/location')
     }
     return {goVoiture,reverseDate}
   }

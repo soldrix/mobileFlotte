@@ -27,7 +27,7 @@ export default defineComponent({
       }).catch(error=>{
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     };

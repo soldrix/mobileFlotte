@@ -15,13 +15,13 @@
         </ion-toolbar>
       </ion-header>
       <ion-content  class="ion-padding">
-        <ion-item lines="full" href="/agences">
+        <ion-item lines="full" @click="redirectRoute('/agences')">
           <ion-label>Agence</ion-label>
         </ion-item>
-        <ion-item lines="full" href="/locations">
+        <ion-item lines="full" @click="redirectRoute('/locations')">
           <ion-label>Mes locations</ion-label>
         </ion-item>
-        <ion-item lines="full" href="/profil">
+        <ion-item lines="full" @click="redirectRoute('/profil')">
           <ion-label>Mon profil</ion-label>
         </ion-item>
         <ion-item lines="full" @click="logout" class="logout">
@@ -42,7 +42,6 @@ import {defineComponent} from "vue";
 import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonMenu,IonMenuButton,IonButtons,IonItem,IonLabel} from "@ionic/vue";
 import axios from "axios";
 import router from "@/router";
-
 export default defineComponent({
   name: "ContainerComponent",
   components: {
@@ -70,16 +69,19 @@ export default defineComponent({
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then( () =>{
-        localStorage.removeItem('token')
-        window.location.href = '/login';
+        localStorage.clear()
+        router.replace('/login');
       }).catch(error => {
         if(error.response.data.message){
           localStorage.clear();
-          router.push('Login');
+          router.replace('/login');
         }
       })
     }
-    return {logout,token};
+    const redirectRoute = (route) =>{
+      router.replace(route)
+    };
+    return {logout,token,redirectRoute};
   }
 })
 </script>
