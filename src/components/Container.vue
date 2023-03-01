@@ -69,7 +69,7 @@ export default defineComponent({
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then( () =>{
-        localStorage.removeItem('token')
+        localStorage.clear()
         router.replace('/login');
       }).catch(error => {
         if(error.response.data.message){

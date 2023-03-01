@@ -67,7 +67,7 @@
           <p>Portes : {{voiture.nbPorte}}</p>
         </li>
         <li>
-          <p>puissances : {{voiture.puissance}} ch</p>
+          <p>Puissances : {{voiture.puissance}} ch</p>
         </li>
       </ul>
     </ion-content>
@@ -115,7 +115,7 @@ export default defineComponent({
         let test = document.getElementById('background');
         test.style.backgroundImage ="url('http://localhost:8000/api/image/"+response.data.voiture.image+"')";
       }).catch(error=>{
-        if(error.message){
+        if(error.response.data.message){
           localStorage.clear();
           router.replace('/login');
         }
