@@ -33,7 +33,7 @@ export default defineComponent({
     const successMsg= ref('');
     const getUser = ()=>{
       // const params = new URLSearchParams(document.location.search);
-      axios.get('http://localhost:8000/api/reset-password'+document.location.search)
+      axios.get('https://gestion-flotte.project-soldrix.fr/api/reset-password'+document.location.search)
           .then(response =>{
             user.value = response.data.data[0];
           })
@@ -41,7 +41,7 @@ export default defineComponent({
     getUser();
     const resetPassword = (id)=>{
       data.value.id = id;
-      axios.post('http://localhost:8000/api/reset-password',data.value)
+      axios.post('https://gestion-flotte.project-soldrix.fr/api/reset-password',data.value)
         .then(response =>{
           successMsg.value = response.data.message;
         })

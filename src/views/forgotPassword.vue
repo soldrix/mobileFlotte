@@ -38,7 +38,7 @@ export default defineComponent({
       router.replace('/login')
     }
     const forgotPassword = () =>{
-      axios.post('http://localhost:8000/api/forget-password',user.value)
+      axios.post('https://gestion-flotte.project-soldrix.fr/api/forget-password',user.value)
       .then(response =>{
         if(response.data.msg){
           message.value = response.data.msg;

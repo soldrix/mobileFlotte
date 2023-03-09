@@ -18,7 +18,7 @@ export default defineComponent({
     const locations =ref([]);
     const location =ref({});
     const getLocations = ()=>{
-      axios.get('http://localhost:8000/api/locations/user/'+localStorage.getItem('id_user'),{
+      axios.get('https://gestion-flotte.project-soldrix.fr/api/locations/user/'+localStorage.getItem('id_user'),{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

@@ -106,14 +106,14 @@ export default defineComponent({
     const voiture = ref([])
 
     const getVoiture = ()=>{
-      axios.get('http://localhost:8000/api/voiture/'+localStorage.getItem('voitureId'),{
+      axios.get('https://gestion-flotte.project-soldrix.fr/api/voiture/'+localStorage.getItem('voitureId'),{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response =>{
         voiture.value = response.data.voiture;
         let test = document.getElementById('background');
-        test.style.backgroundImage ="url('http://localhost:8000/api/image/"+response.data.voiture.image+"')";
+        test.style.backgroundImage ="url('https://gestion-flotte.project-soldrix.fr/api/image/"+response.data.voiture.image+"')";
       }).catch(error=>{
         if(error.response.data.message){
           localStorage.clear();
@@ -125,7 +125,7 @@ export default defineComponent({
     getVoiture()
     const dateLocation = ref([]);
     const location = () =>{
-      axios.get('http://localhost:8000/api/locations',{
+      axios.get('https://gestion-flotte.project-soldrix.fr/api/locations',{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

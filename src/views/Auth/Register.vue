@@ -51,7 +51,7 @@ export default defineComponent({
     }
     verifConexion();
     const register = () => {
-      axios.post('http://localhost:8000/api/register', user.value)
+      axios.post('https://gestion-flotte.project-soldrix.fr/api/register', user.value)
           .then(response => {
             localStorage.setItem('token', response.data.access_token)
             localStorage.setItem('id_user', response.data.id_user)

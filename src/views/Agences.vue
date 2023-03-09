@@ -1,9 +1,11 @@
 <template>
-  <container title="Liste d'agence">
+  <container title="Liste d'agences">
     <div class="col-auto d-flex">
       <input type="text" class="form-control" v-model="searchVal">
       <button class="btn btn-outline-primary mx-2" @click="searchagence">Rechercher</button>
-      <button class="btn btn-outline-danger mx-2" @click="getAgences">réinitialiser</button>
+      <button class="btn btn-outline-danger mx-2" @click="resetSearch">
+        <ion-icon slot="icon-only" :icon="refresh"></ion-icon>
+      </button>
     </div>
     <div v-if="agences.length > 0">
         <Agence-item  class="courses mt-3"  v-for="(agence, index) in agences" :key="index" :agence="agence"
@@ -20,14 +22,21 @@ import {defineComponent, ref} from 'vue';
 import Container from "../components/Container";
 import AgenceItem from "../components/AgenceItem";
 import axios from "axios";
-import {toastController} from "@ionic/vue";
+import {toastController,IonIcon} from "@ionic/vue";
 import router from "../router";
+import {refresh} from "ionicons/icons";
 
 export default defineComponent({
   name: 'CoursesList',
   components: {
     Container,
-    AgenceItem
+    AgenceItem,
+    IonIcon
+  },
+  data(){
+    return {
+      refresh
+    }
   },
   setup() {
     const agences = ref([])
@@ -36,7 +45,7 @@ export default defineComponent({
     const statusSearch = ref(true);
     const getAgences = () => {
       searchVal.value = "";
-      axios.get('http://localhost:8000/api/agences', {
+      axios.get('https://gestion-flotte.project-soldrix.fr/api/agences', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -71,7 +80,7 @@ export default defineComponent({
       router.replace('/agence/voitures');
     }
     const searchagence = ()=>{
-      axios.get("http://localhost:8000/api/agences/search/"+searchVal.value,{
+      axios.get("https://gestion-flotte.project-soldrix.fr/api/agences/search/"+searchVal.value,{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -87,7 +96,13 @@ export default defineComponent({
         }
       })
     };
-    return {agences, agence, VoituresAgence, searchagence,searchVal,statusSearch,getAgences}
+    const resetSearch = ()=>{
+      if(searchVal.value !== ''){
+        searchVal.value = "";
+        getAgences();
+      }
+    };
+    return {agences, agence, VoituresAgence, searchagence,searchVal,statusSearch,getAgences,resetSearch}
   }
 });
 </script>

@@ -1,9 +1,11 @@
 <template>
-  <container title="Liste de voiture">
+  <container title="Liste des voitures">
     <div class="col-auto d-flex">
       <input type="text" class="form-control" v-model="searchVal">
       <button class="btn btn-outline-primary mx-2" @click="searchVoiture">Rechercher</button>
-      <button class="btn btn-outline-danger mx-2" @click="getVoitures">réinitialiser</button>
+      <button class="btn btn-outline-danger mx-2" @click="resetSearch">
+        <ion-icon slot="icon-only" :icon="refresh"></ion-icon>
+      </button>
     </div>
     <div v-if="voitures.length > 0">
       <VoitureItem class="courses mt-2" v-for="(voiture, index) in voitures" :key="index" :voiture="voiture"
@@ -20,12 +22,20 @@ import Container from "@/components/Container";
 import VoitureItem from "../components/Voitureitem";
 import axios from "axios";
 import router from "../router";
+import {IonIcon} from '@ionic/vue';
+import {refresh} from 'ionicons/icons';
 
 export default defineComponent({
   name: 'CoursesList',
   components: {
     Container,
-    VoitureItem
+    VoitureItem,
+    IonIcon
+  },
+  data(){
+    return {
+      refresh
+    }
   },
   setup() {
     const voitures = ref([]);
@@ -33,19 +43,18 @@ export default defineComponent({
     const searchVal = ref('');
     const statusSearch = ref(true);
     const getVoitures = () => {
-      searchVal.value = "";
-      axios.get('http://localhost:8000/api/voitures/agence/'+localStorage.getItem('agenceId'), {
-        headers: {
-          "Authorization": 'Bearer ' + localStorage.getItem('token')
-        }
-      }).then(response => {
-        voitures.value = response.data.voitures
-      }).catch(error => {
-        if(error.response.data.message){
-          localStorage.clear();
-          router.replace('/login');
-        }
-      })
+        axios.get('https://gestion-flotte.project-soldrix.fr/api/voitures/agence/'+localStorage.getItem('agenceId'), {
+          headers: {
+            "Authorization": 'Bearer ' + localStorage.getItem('token')
+          }
+        }).then(response => {
+          voitures.value = response.data.voitures
+        }).catch(error => {
+          if(error.response.data.message){
+            localStorage.clear();
+            router.replace('/login');
+          }
+        })
     }
     getVoitures()
 
@@ -54,7 +63,7 @@ export default defineComponent({
       router.replace('/voiture/location')
     }
     const searchVoiture = ()=>{
-      axios.get("http://localhost:8000/api/voitures/search/"+searchVal.value,{
+      axios.get("https://gestion-flotte.project-soldrix.fr/api/voitures/search/"+searchVal.value,{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -70,8 +79,13 @@ export default defineComponent({
         }
       })
     };
-
-    return {voitures, voiture,getVoitures, voitureLocation,searchVoiture,statusSearch,searchVal}
+    const resetSearch = ()=>{
+      if(searchVal.value !== ''){
+        searchVal.value = "";
+        getVoitures();
+      }
+    };
+    return {voitures, voiture,getVoitures, voitureLocation,searchVoiture,statusSearch,searchVal,resetSearch}
   }
 });
 </script>

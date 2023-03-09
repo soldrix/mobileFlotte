@@ -2,7 +2,7 @@
   <container title="Mon Profil">
     <div class="container-fluid px-3">
       <h2 class="px-3">{{(user.first_name ?? '')+" "+(user.last_name ?? '')}}</h2>
-      <div class="col-auto bg-dark rounded">
+      <div class="col-auto bg-dark rounded py-3">
         <div class="px-3 d-flex justify-content-between">
           <div class="col-auto">
             <p class="m-0">Prenom</p>
@@ -10,13 +10,15 @@
           </div>
           <button class="btn btn-outline-light h-fit align-self-center" @click="openOrClose('first_name',true)">Modifier</button>
         </div>
-        <div class="px-3 d-flex justify-content-between">
-          <div class="col-auto">
+        <div class=" border-bottom border-1 border-light col-10 mx-auto my-3"></div>
+        <div class="px-3 d-flex justify-content-between ">
+          <div class="col-auto ">
             <p class="m-0">Nom</p>
             <p class="m-0" >{{user.last_name}}</p>
           </div>
           <button class="btn btn-outline-light h-fit align-self-center" @click="openOrClose('last_name',true)">Modifier</button>
         </div>
+        <div class=" border-bottom border-1 border-light col-10 mx-auto my-3"></div>
         <div class="px-3 d-flex justify-content-between">
           <div class="col-auto">
             <p class="m-0">Email</p>
@@ -185,7 +187,7 @@ export default defineComponent({
     });
     const msg =ref([])
     const getUser = () =>{
-      axios.get('http://localhost:8000/api/user/'+localStorage.getItem('id_user'),{
+      axios.get('https://gestion-flotte.project-soldrix.fr/api/user/'+localStorage.getItem('id_user'),{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -209,7 +211,7 @@ export default defineComponent({
             text: 'Delete',
             handler: () => {
               if(type === 'delete'){
-                axios.delete('http://localhost:8000/api/user/delete/'+localStorage.getItem('id_user'),{
+                axios.delete('https://gestion-flotte.project-soldrix.fr/api/user/delete/'+localStorage.getItem('id_user'),{
                   headers: {
                     "Authorization": 'Bearer ' + localStorage.getItem('token')
                   }
@@ -272,7 +274,7 @@ export default defineComponent({
     confirm: function (update) {
       switch (update) {
           case 'first_name':
-            axios.post("http://localhost:8000/api/user/edit/first_name", this.data, {
+            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/first_name", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }
@@ -292,7 +294,7 @@ export default defineComponent({
             })
           break;
           case "last_name":
-            axios.post("http://localhost:8000/api/user/edit/last_name", this.data, {
+            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/last_name", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }
@@ -312,7 +314,7 @@ export default defineComponent({
             })
           break;
           case 'email':
-            axios.post("http://localhost:8000/api/user/edit/email", this.data, {
+            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/email", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }
@@ -332,7 +334,7 @@ export default defineComponent({
             })
           break;
           case 'password':
-            axios.post("http://localhost:8000/api/user/edit/password", this.data, {
+            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/password", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }

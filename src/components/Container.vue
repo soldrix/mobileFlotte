@@ -16,7 +16,7 @@
       </ion-header>
       <ion-content  class="ion-padding">
         <ion-item lines="full" @click="redirectRoute('/agences')">
-          <ion-label>Agence</ion-label>
+          <ion-label>Agences</ion-label>
         </ion-item>
         <ion-item lines="full" @click="redirectRoute('/locations')">
           <ion-label>Mes locations</ion-label>
@@ -64,7 +64,7 @@ export default defineComponent({
   },setup(){
     const token = localStorage.getItem('token');
     const logout = () =>{
-      axios.post('http://localhost:8000/api/logout',{},{
+      axios.post('https://gestion-flotte.project-soldrix.fr/api/logout',{},{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

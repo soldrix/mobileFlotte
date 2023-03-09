@@ -2,7 +2,7 @@
 
   <div class="course">
     <div class="col-auto d-flex flex-column justify-content-center">
-      <img :src="'http://localhost:8000/api/image/'+voiture.image" alt="">
+      <img :src="'https://gestion-flotte.project-soldrix.fr/api/image/'+voiture.image" alt="">
       <h2>Marque : {{voiture.marque}}</h2>
       <h2>Model : {{voiture.model}}</h2>
       <h2>Type : {{voiture.type}}</h2>

@@ -39,7 +39,7 @@ export default defineComponent({
       }if(datas.DateFin){
         datas.DateFin = reverseDate(datas.DateFin)
       }
-      axios.post('http://localhost:8000/api/location/create', datas, {
+      axios.post('https://gestion-flotte.project-soldrix.fr/api/location/create', datas, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
