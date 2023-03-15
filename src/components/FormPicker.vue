@@ -25,7 +25,7 @@
           <label for="DateDebut" class="text-black">Date de début</label>
         </div>
         <div class="form-floating">
-          <input type="text" id="DateFin" class="form-control" v-model="inputValue.end" readonly>
+          <input type="text" id="DateFin" class="form-control" v-model="inputValue.end" readonly disabled>
           <label for="DateFin" class="text-black">Date de Fin</label>
         </div>
       </div>
@@ -79,6 +79,7 @@ import { DatePicker } from 'v-calendar';
 import axios from "axios";
 import {IonButton, IonButtons, IonContent, IonHeader, IonModal, IonTitle, IonToolbar} from "@ionic/vue";
 import router from "../router";
+import {api} from "../main";
 
 export default defineComponent({
   name: 'FormPickerItem',
@@ -99,6 +100,7 @@ export default defineComponent({
     IonButton,
     IonContent
   },setup(prop,{emit}){
+    const apiUrl = api('local');
     const id_voiture = localStorage.getItem('voitureId');
     const date = ref(new Date())
     date.value.setDate(Number(date.value.getDate()))
@@ -106,14 +108,14 @@ export default defineComponent({
     const voiture = ref([])
 
     const getVoiture = ()=>{
-      axios.get('https://gestion-flotte.project-soldrix.fr/api/voiture/'+localStorage.getItem('voitureId'),{
+      axios.get(apiUrl+'/voiture/'+localStorage.getItem('voitureId'),{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
       }).then(response =>{
         voiture.value = response.data.voiture;
         let test = document.getElementById('background');
-        test.style.backgroundImage ="url('https://gestion-flotte.project-soldrix.fr/api/image/"+response.data.voiture.image+"')";
+        test.style.backgroundImage ="url('"+apiUrl+"/image/"+response.data.voiture.image+"')";
       }).catch(error=>{
         if(error.response.data.message){
           localStorage.clear();
@@ -125,7 +127,7 @@ export default defineComponent({
     getVoiture()
     const dateLocation = ref([]);
     const location = () =>{
-      axios.get('https://gestion-flotte.project-soldrix.fr/api/locations',{
+      axios.get(apiUrl+'/locations',{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

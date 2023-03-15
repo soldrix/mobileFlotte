@@ -11,6 +11,7 @@ import Container from "@/components/Container";
 import FormPicker from "../components/FormPicker";
 import axios from "axios";
 import router from "../router";
+import {api} from "../main";
 export default defineComponent({
   name: 'AssuranceList',
   components: {
@@ -18,6 +19,7 @@ export default defineComponent({
     Container,
   },
   setup() {
+    const apiUrl = api('local');
     const msgErrors =ref([]);
     const reverseDate =  (d) => {
       if(d.match('-')){
@@ -39,7 +41,7 @@ export default defineComponent({
       }if(datas.DateFin){
         datas.DateFin = reverseDate(datas.DateFin)
       }
-      axios.post('https://gestion-flotte.project-soldrix.fr/api/location/create', datas, {
+      axios.post(apiUrl+'/location/create', datas, {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

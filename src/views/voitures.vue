@@ -24,6 +24,7 @@ import axios from "axios";
 import router from "../router";
 import {IonIcon} from '@ionic/vue';
 import {refresh} from 'ionicons/icons';
+import {api} from "../main";
 
 export default defineComponent({
   name: 'CoursesList',
@@ -38,12 +39,13 @@ export default defineComponent({
     }
   },
   setup() {
+    const apiUrl = api('local');
     const voitures = ref([]);
     const voiture = ref({});
     const searchVal = ref('');
     const statusSearch = ref(true);
     const getVoitures = () => {
-        axios.get('https://gestion-flotte.project-soldrix.fr/api/voitures/agence/'+localStorage.getItem('agenceId'), {
+        axios.get(apiUrl+'/voitures/agence/'+localStorage.getItem('agenceId'), {
           headers: {
             "Authorization": 'Bearer ' + localStorage.getItem('token')
           }
@@ -63,7 +65,7 @@ export default defineComponent({
       router.replace('/voiture/location')
     }
     const searchVoiture = ()=>{
-      axios.get("https://gestion-flotte.project-soldrix.fr/api/voitures/search/"+searchVal.value,{
+      axios.get(apiUrl+"/voitures/search/"+searchVal.value,{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

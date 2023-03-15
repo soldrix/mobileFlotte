@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import {api} from "../../main";
 import {defineComponent, ref} from "vue";
 import Container from "@/components/Container";
 import axios from "axios"
@@ -42,7 +43,8 @@ export default defineComponent({
     Container
   },
   setup() {
-    const user = ref({})
+    const apiUrl = api('local');
+    const user = ref({});
     const msgErrors = ref({});
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
@@ -51,7 +53,7 @@ export default defineComponent({
     }
     verifConexion();
     const register = () => {
-      axios.post('https://gestion-flotte.project-soldrix.fr/api/register', user.value)
+      axios.post(apiUrl+'/register', user.value)
           .then(response => {
             localStorage.setItem('token', response.data.access_token)
             localStorage.setItem('id_user', response.data.id_user)

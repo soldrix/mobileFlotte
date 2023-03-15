@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import {api} from '../../main';
 import {defineComponent, ref} from "vue";
 import Container from "@/components/Container";
 import axios from "axios";
@@ -29,6 +30,7 @@ export default defineComponent({
     Container
   },
   setup() {
+    const apiUrl = api('local');
     const user = ref({})
     const msg = ref("");
     const verifConexion = () =>{
@@ -56,7 +58,7 @@ export default defineComponent({
       localStorage.clear()
     }
     const login = () => {
-      axios.post('https://gestion-flotte.project-soldrix.fr/api/login', user.value)
+      axios.post(apiUrl+'/login', user.value)
           .then(response => {
             localStorage.setItem('token', response.data.access_token)
             localStorage.setItem('id_user', response.data.id_user)

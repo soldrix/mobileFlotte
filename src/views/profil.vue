@@ -160,6 +160,7 @@ import {
   actionSheetController
 } from "@ionic/vue";
 import router from "../router";
+import {api} from "../main";
 export default defineComponent({
   name : "ProfilView",
   components:{
@@ -181,13 +182,14 @@ export default defineComponent({
      password_isOpen:false
    }
   },setup(){
+    const apiUrl = api('local');
     const user = ref([]);
     const data =ref({
       'id' : localStorage.getItem('id_user')
     });
     const msg =ref([])
     const getUser = () =>{
-      axios.get('https://gestion-flotte.project-soldrix.fr/api/user/'+localStorage.getItem('id_user'),{
+      axios.get(apiUrl+'/user/'+localStorage.getItem('id_user'),{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -211,7 +213,7 @@ export default defineComponent({
             text: 'Delete',
             handler: () => {
               if(type === 'delete'){
-                axios.delete('https://gestion-flotte.project-soldrix.fr/api/user/delete/'+localStorage.getItem('id_user'),{
+                axios.delete(apiUrl+'/user/delete/'+localStorage.getItem('id_user'),{
                   headers: {
                     "Authorization": 'Bearer ' + localStorage.getItem('token')
                   }
@@ -241,7 +243,7 @@ export default defineComponent({
       await actionSheet.present();
     };
 
-    return {user,data,msg,presentActionSheet}
+    return {user,data,msg,presentActionSheet,apiUrl}
   },methods:{
     async presentToast  (datas)   {
       const  toast = await toastController.create({
@@ -274,7 +276,7 @@ export default defineComponent({
     confirm: function (update) {
       switch (update) {
           case 'first_name':
-            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/first_name", this.data, {
+            axios.post(this.apiUrl+"/user/edit/first_name", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }
@@ -294,7 +296,7 @@ export default defineComponent({
             })
           break;
           case "last_name":
-            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/last_name", this.data, {
+            axios.post(this.apiUrl+"/user/edit/last_name", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }
@@ -314,7 +316,7 @@ export default defineComponent({
             })
           break;
           case 'email':
-            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/email", this.data, {
+            axios.post(this.apiUrl+"/user/edit/email", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }
@@ -334,7 +336,7 @@ export default defineComponent({
             })
           break;
           case 'password':
-            axios.post("https://gestion-flotte.project-soldrix.fr/api/user/edit/password", this.data, {
+            axios.post(this.apiUrl+"/user/edit/password", this.data, {
               headers: {
                 "Authorization": 'Bearer ' + localStorage.getItem('token')
               }

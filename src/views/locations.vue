@@ -9,16 +9,18 @@ import Container from "../components/Container";
 import locationItem from "../components/locationItem";
 import axios from "axios";
 import router from "../router";
+import {api} from "../main";
 export default defineComponent({
   name:'locationView',
   components:{
     Container,
     locationItem
   },setup(){
+    const apiUrl = api('local');
     const locations =ref([]);
     const location =ref({});
     const getLocations = ()=>{
-      axios.get('https://gestion-flotte.project-soldrix.fr/api/locations/user/'+localStorage.getItem('id_user'),{
+      axios.get(apiUrl+'/locations/user/'+localStorage.getItem('id_user'),{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

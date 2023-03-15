@@ -42,6 +42,7 @@ import {defineComponent} from "vue";
 import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonMenu,IonMenuButton,IonButtons,IonItem,IonLabel} from "@ionic/vue";
 import axios from "axios";
 import router from "@/router";
+import {api} from "../main";
 export default defineComponent({
   name: "ContainerComponent",
   components: {
@@ -63,8 +64,9 @@ export default defineComponent({
     }
   },setup(){
     const token = localStorage.getItem('token');
+    const apiUrl = api('local');
     const logout = () =>{
-      axios.post('https://gestion-flotte.project-soldrix.fr/api/logout',{},{
+      axios.post(apiUrl+'/logout',{},{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

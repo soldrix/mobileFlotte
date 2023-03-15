@@ -29,3 +29,6 @@ const app = createApp(App)
 router.isReady().then(() => {
   app.mount('#app');
 });
+export function api(type){
+  return (type === 'local') ? 'http://localhost:8000/api' : "https://gestion-flotte.project-soldrix.fr/api";
+}

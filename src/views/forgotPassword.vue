@@ -19,12 +19,14 @@ import {defineComponent, ref} from "vue";
 import Container from "@/components/Container";
 import axios from "axios";
 import router from "../router";
+import {api} from "../main";
 export default defineComponent({
   name: "AuthLogin",
   components: {
     Container
   },
   setup() {
+    const apiUrl = api('local');
     const user = ref({})
     const message = ref("");
     const msgErrors =ref("");
@@ -38,7 +40,7 @@ export default defineComponent({
       router.replace('/login')
     }
     const forgotPassword = () =>{
-      axios.post('https://gestion-flotte.project-soldrix.fr/api/forget-password',user.value)
+      axios.post(apiUrl+'/forget-password',user.value)
       .then(response =>{
         if(response.data.msg){
           message.value = response.data.msg;

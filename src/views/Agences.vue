@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import {api} from "../main";
 import {defineComponent, ref} from 'vue';
 import Container from "../components/Container";
 import AgenceItem from "../components/AgenceItem";
@@ -39,13 +40,14 @@ export default defineComponent({
     }
   },
   setup() {
+    const apiUrl = api('local');
     const agences = ref([])
     const agence = ref({})
     const searchVal = ref("");
     const statusSearch = ref(true);
     const getAgences = () => {
       searchVal.value = "";
-      axios.get('https://gestion-flotte.project-soldrix.fr/api/agences', {
+      axios.get(apiUrl+'/agences', {
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }
@@ -80,7 +82,7 @@ export default defineComponent({
       router.replace('/agence/voitures');
     }
     const searchagence = ()=>{
-      axios.get("https://gestion-flotte.project-soldrix.fr/api/agences/search/"+searchVal.value,{
+      axios.get(apiUrl+"/agences/search/"+searchVal.value,{
         headers: {
           "Authorization": 'Bearer ' + localStorage.getItem('token')
         }

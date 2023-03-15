@@ -22,18 +22,20 @@ import {defineComponent, ref} from "vue";
 import Container from "../components/Container";
 import axios from "axios";
 import router from "../router";
+import {api} from "../main";
 export default defineComponent({
   name:"resetView",
   components:{
     Container
   },setup(){
+    const apiUrl = api('local');
     const user = ref([]);
     const data =ref({});
     const msg = ref({});
     const successMsg= ref('');
     const getUser = ()=>{
       // const params = new URLSearchParams(document.location.search);
-      axios.get('https://gestion-flotte.project-soldrix.fr/api/reset-password'+document.location.search)
+      axios.get(apiUrl+'/reset-password'+document.location.search)
           .then(response =>{
             user.value = response.data.data[0];
           })
@@ -41,7 +43,7 @@ export default defineComponent({
     getUser();
     const resetPassword = (id)=>{
       data.value.id = id;
-      axios.post('https://gestion-flotte.project-soldrix.fr/api/reset-password',data.value)
+      axios.post(apiUrl+'/reset-password',data.value)
         .then(response =>{
           successMsg.value = response.data.message;
         })

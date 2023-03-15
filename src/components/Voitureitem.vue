@@ -2,7 +2,7 @@
 
   <div class="course">
     <div class="col-auto d-flex flex-column justify-content-center">
-      <img :src="'https://gestion-flotte.project-soldrix.fr/api/image/'+voiture.image" alt="">
+      <img :src="apiUrl+'/image/'+voiture.image" alt="">
       <h2>Marque : {{voiture.marque}}</h2>
       <h2>Model : {{voiture.model}}</h2>
       <h2>Type : {{voiture.type}}</h2>
@@ -16,6 +16,7 @@
 
 <script>
 import {defineComponent} from "vue";
+import {api} from "../main";
 export default defineComponent({
   name: "VoitureItem",
   props: {
@@ -25,6 +26,7 @@ export default defineComponent({
     }
   },
   setup(props, {emit}) {
+    const apiUrl = api('local');
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');
@@ -40,7 +42,7 @@ export default defineComponent({
     }
 
 
-    return {voitureLocation,reverseDate}
+    return {voitureLocation,reverseDate,apiUrl}
   }
 })
 </script>
