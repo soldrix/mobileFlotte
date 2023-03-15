@@ -8,6 +8,8 @@ import forgotPassword from "../views/forgotPassword";
 import profil from "../views/profil";
 import resetPassword from "../views/resetPassword";
 import locations from "../views/locations";
+import deleteAccount from "../views/Auth/deleteAccount";
+import activateAccount from "../views/Auth/activateAccount";
 const routes = [
   {
     path: '/',
@@ -49,6 +51,16 @@ const routes = [
     component: resetPassword
   },
   {
+    path:'/deleteAccount',
+    name:'deleteAccount',
+    component: deleteAccount
+  },
+  {
+    path:'/activateAccount',
+    name:'activateAccount',
+    component: activateAccount
+  },
+  {
     path: '/register',
     name: 'Register',
     component: Register
@@ -66,7 +78,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (localStorage.getItem('token') == null && to.name != 'Login' && to.name != 'Register' && to.name != 'forgot-password' && to.name != 'reset-password') {
+  if (localStorage.getItem('token') == null && to.name != 'Login' && to.name != 'Register' && to.name != 'forgot-password' && to.name != 'reset-password' && to.name != 'deleteAccount' && to.name !== 'activateAccount') {
     next('/login')
   }
   else next()

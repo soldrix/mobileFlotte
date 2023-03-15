@@ -10,9 +10,16 @@
         <input id="password" type="password" class="inputForm" v-model="user.password">
       </div>
       <p class="text-center text-danger">{{msg ?? ''}}</p>
-      <button class="btn btn-outline-primary" @click.prevent="login">Se connecter</button>
-      <button class="btn btn-outline-secondary my-2" @click.prevent="register">S'inscrire</button>
-      <a href="/forgot-password" class="text-center">Mot de passe oublié ?</a>
+      <div v-if="userDisabled === true">
+        <button class="btn btn-outline-danger w-100" @click="redirectDeleteAccount">Supprimer le compte ?</button>
+        <button class="btn btn-outline-success w-100 my-2" @click="redirectActivateAccount">Réactiver le compte ?</button>
+      </div>
+      <div v-else>
+        <button class="btn btn-outline-primary w-100" @click.prevent="login">Se connecter</button>
+        <button class="btn btn-outline-secondary w-100 my-2" @click.prevent="register">S'inscrire</button>
+        <a href="/forgot-password" class="text-center">Mot de passe oublié ?</a>
+      </div>
+
     </form>
   </container>
 </template>
@@ -33,6 +40,7 @@ export default defineComponent({
     const apiUrl = api('local');
     const user = ref({})
     const msg = ref("");
+    const userDisabled = ref(false);
     const verifConexion = () =>{
       if(localStorage.getItem('token') !== null){
         router.replace('/agences');
@@ -73,11 +81,21 @@ export default defineComponent({
             msg.value = error.response.data.message;
             document.querySelectorAll('.inputForm').forEach(function (elm) {
               elm.classList.value = 'inputForm is-invalid';
-            })
+            });
+            if(error.response.data.data){
+              userDisabled.value = true;
+              localStorage.setItem('userDisabled',error.response.data.data)
+            }
           })
-    }
+    };
+    const redirectDeleteAccount = () =>{
+      router.replace('/deleteAccount');
+    };
+    const redirectActivateAccount = ()=>{
+      router.replace('/activateAccount');
+    };
 
-    return {user, login, register,msg}
+    return {user, login, register,msg,userDisabled,redirectDeleteAccount,redirectActivateAccount}
   }
 })
 </script>
