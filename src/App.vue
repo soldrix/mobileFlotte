@@ -20,6 +20,9 @@ export default defineComponent({
 .is-invalid{
   border: 1px solid red;
 }
+ion-content {
+  --background: #121212;
+}
 input{
   outline: transparent;
 }

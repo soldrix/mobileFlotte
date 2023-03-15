@@ -101,4 +101,5 @@ export default defineComponent({
 main {
   padding: 0 10px;
 }
+
 </style>
