@@ -33,7 +33,12 @@
       </div>
       <div class="border-1 border-top border-light mt-5 pt-3">
         <h3>Suppression de compte</h3>
-        <button class="btn btn-outline-primary" @click="presentActionSheet('delete')">Supprimer le compte</button>
+        <p class="text-muted">Désactiver ton compte signifie que tu pourras le récupérer à tout moment après sa désactivation.</p>
+        <div class="d-flex flex-wrap">
+          <button class="btn btn-outline-danger m-1" @click="presentActionSheet('desactivation')">Désactiver le compte</button>
+          <button class="btn btn-danger m-1" @click="presentActionSheet('delete')">Supprimer le compte</button>
+        </div>
+
       </div>
     </div>
 
@@ -182,7 +187,7 @@ export default defineComponent({
      password_isOpen:false
    }
   },setup(){
-    const apiUrl = api('local');
+    const apiUrl = api();
     const user = ref([]);
     const data =ref({
       'id' : localStorage.getItem('id_user')
@@ -210,7 +215,7 @@ export default defineComponent({
         header: 'Êtes-vous sûr ?',
         buttons: [
           {
-            text: 'Delete',
+            text: 'Continuer',
             handler: () => {
               if(type === 'delete'){
                 axios.delete(apiUrl+'/user/delete/'+localStorage.getItem('id_user'),{
@@ -228,10 +233,26 @@ export default defineComponent({
                   }
                 })
               }
+              if(type === 'desactivation'){
+                axios.post(apiUrl+'/user/desactivate',{ id:localStorage.getItem('id_user')},{
+                  headers: {
+                    "Authorization": 'Bearer ' + localStorage.getItem('token')
+                  }
+                }).then(response =>{
+                  localStorage.setItem('deleteMsg',response.data.message)
+                  router.replace('/login');
+                })
+                    .catch(error =>{
+                      if(error.response.data.message){
+                        localStorage.clear();
+                        router.replace('/login');
+                      }
+                    })
+              }
             }
           },
           {
-            text: 'Cancel',
+            text: 'Annuler',
             role: 'cancel',
             data: {
               action: 'cancel',

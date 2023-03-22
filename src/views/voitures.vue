@@ -39,7 +39,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const apiUrl = api('local');
+    const apiUrl = api();
     const voitures = ref([]);
     const voiture = ref({});
     const searchVal = ref('');

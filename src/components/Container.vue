@@ -64,7 +64,7 @@ export default defineComponent({
     }
   },setup(){
     const token = localStorage.getItem('token');
-    const apiUrl = api('local');
+    const apiUrl = api();
     const logout = () =>{
       axios.post(apiUrl+'/logout',{},{
         headers: {

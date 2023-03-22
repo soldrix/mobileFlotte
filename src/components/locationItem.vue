@@ -1,5 +1,6 @@
 <template>
   <div class="locations my-2">
+    <img :src="apiUrl+'/image/'+voiture.image" alt="">
     <h2>Numéro de comandes : <span>{{ location.commandeNumber }}</span></h2>
     <p>Date de debut : {{reverseDate(location.DateDebut)}}</p>
     <p>Date de fin : {{reverseDate(location.DateFin)}}</p>
@@ -10,6 +11,7 @@
 <script>
 import {defineComponent} from "vue";
 import router from "../router";
+import {api} from "@/main";
 export default defineComponent({
   name:'locationItem',
   props:{
@@ -18,6 +20,8 @@ export default defineComponent({
       require:true
     }
   },setup(){
+    const apiUrl = api();
+
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');
@@ -32,7 +36,7 @@ export default defineComponent({
       localStorage.setItem('voitureId',id)
       router.replace('/voiture/location')
     }
-    return {goVoiture,reverseDate}
+    return {goVoiture,reverseDate,apiUrl}
   }
 })
 </script>

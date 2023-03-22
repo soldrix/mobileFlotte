@@ -28,7 +28,7 @@ export default defineComponent({
   components:{
     Container
   },setup(){
-    const apiUrl = api('local');
+    const apiUrl = api();
     const user = ref([]);
     const data =ref({});
     const msg = ref({});
