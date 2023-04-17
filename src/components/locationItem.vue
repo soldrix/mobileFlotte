@@ -1,11 +1,10 @@
 <template>
   <div class="locations my-2">
-    <img :src="apiUrl+'/image/'+voiture.image" alt="">
+    <img :src="apiUrl+'/image/'+location.image" alt="" @click="goVoiture(location.id_voiture)">
     <h2>Numéro de comandes : <span>{{ location.commandeNumber }}</span></h2>
     <p>Date de debut : {{reverseDate(location.DateDebut)}}</p>
     <p>Date de fin : {{reverseDate(location.DateFin)}}</p>
     <p>Montant de la location : {{location.montant}}€</p>
-    <a class="text-primary" @click="goVoiture(location.id_voiture)">Voiture : {{location.marque+' '+location.model}}</a>
   </div>
 </template>
 <script>

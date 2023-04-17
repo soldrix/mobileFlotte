@@ -23,10 +23,16 @@ export default defineComponent({
 ion-content {
   --background: #121212;
 }
+ion-header{
+  --ion-toolbar-background: #0d0d0d;
+}
 input{
   outline: transparent;
 }
 .h-fit{
   height: fit-content;
+}
+*:not(input){
+  --ion-text-color: white !important;
 }
 </style>
