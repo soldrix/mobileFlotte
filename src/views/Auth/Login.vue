@@ -1,5 +1,8 @@
 <template>
   <container title="Connexion">
+
+      <ion-spinner v-if="formSend === true" style="width: 60%;left: 20%;height: 80vh;position: absolute"></ion-spinner>
+
     <form class="d-flex justify-content-center flex-column p-2 bg-dark mt-5">
       <div class="d-flex justify-content-between px-3 mb-2">
         <label for="email">Email :</label>
@@ -29,15 +32,17 @@ import {api} from '../../main';
 import {defineComponent, ref} from "vue";
 import Container from "@/components/Container";
 import axios from "axios";
-import {toastController} from "@ionic/vue";
+import {toastController,IonSpinner } from "@ionic/vue";
 import router from "../../router";
 export default defineComponent({
   name: "AuthLogin",
   components: {
-    Container
+    Container,
+    IonSpinner
   },
   setup() {
-    const apiUrl = api();
+    const formSend = ref(false);
+    const apiUrl = api('local');
     const user = ref({})
     const msg = ref("");
     const userDisabled = ref(false);
@@ -66,6 +71,7 @@ export default defineComponent({
       localStorage.clear()
     }
     const login = () => {
+      formSend.value = true;
       axios.post(apiUrl+'/login', user.value)
           .then(response => {
             localStorage.setItem('token', response.data.access_token)
@@ -95,7 +101,7 @@ export default defineComponent({
       router.replace('/activateAccount');
     };
 
-    return {user, login, register,msg,userDisabled,redirectDeleteAccount,redirectActivateAccount}
+    return {user, login, register,msg,userDisabled,redirectDeleteAccount,redirectActivateAccount,formSend}
   }
 })
 </script>

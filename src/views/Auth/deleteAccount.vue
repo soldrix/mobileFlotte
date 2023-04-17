@@ -30,7 +30,7 @@ export default defineComponent({
     Container
   },
   setup() {
-    const apiUrl = api();
+    const apiUrl = api('local');
     const user = ref({})
     const msg = ref("");
     const verifConexion = () =>{

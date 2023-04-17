@@ -187,7 +187,7 @@ export default defineComponent({
      password_isOpen:false
    }
   },setup(){
-    const apiUrl = api();
+    const apiUrl = api('local');
     const user = ref([]);
     const data =ref({
       'id' : localStorage.getItem('id_user')

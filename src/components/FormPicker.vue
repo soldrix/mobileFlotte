@@ -100,7 +100,7 @@ export default defineComponent({
     IonButton,
     IonContent
   },setup(prop,{emit}){
-    const apiUrl = api();
+    const apiUrl = api('local');
     const id_voiture = localStorage.getItem('voitureId');
     const date = ref(new Date())
     date.value.setDate(Number(date.value.getDate()))

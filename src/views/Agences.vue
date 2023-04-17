@@ -40,7 +40,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const apiUrl = api();
+    const apiUrl = api('local');
     const agences = ref([])
     const agence = ref({})
     const searchVal = ref("");

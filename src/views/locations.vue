@@ -16,7 +16,7 @@ export default defineComponent({
     Container,
     locationItem
   },setup(){
-    const apiUrl = api();
+    const apiUrl = api('local');
     const locations =ref([]);
     const location =ref({});
     const getLocations = ()=>{

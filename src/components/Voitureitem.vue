@@ -26,7 +26,7 @@ export default defineComponent({
     }
   },
   setup(props, {emit}) {
-    const apiUrl = api();
+    const apiUrl = api('local');
     const reverseDate =  (d) => {
       if(d.match('-')){
         d = d.split('-');

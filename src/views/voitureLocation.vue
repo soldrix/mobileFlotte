@@ -19,7 +19,7 @@ export default defineComponent({
     Container,
   },
   setup() {
-    const apiUrl = api();
+    const apiUrl = api('local');
     const msgErrors =ref([]);
     const reverseDate =  (d) => {
       if(d.match('-')){
