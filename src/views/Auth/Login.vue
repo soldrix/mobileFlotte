@@ -84,6 +84,7 @@ export default defineComponent({
             })
           })
           .catch(error => {
+            formSend.value = false;
             msg.value = error.response.data.message;
             document.querySelectorAll('.inputForm').forEach(function (elm) {
               elm.classList.value = 'inputForm is-invalid';
